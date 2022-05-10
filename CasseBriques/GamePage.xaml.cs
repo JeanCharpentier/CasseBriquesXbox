@@ -17,7 +17,7 @@ namespace CasseBriques
 {
     public sealed partial class GamePage : Page
     {
-        readonly Game1 _game;
+        readonly Main _game;
 
         public GamePage()
         {
@@ -25,7 +25,7 @@ namespace CasseBriques
 
             // Create the game.
             var launchArguments = string.Empty;
-            _game = MonoGame.Framework.XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, swapChainPanel);
+            _game = MonoGame.Framework.XamlGame<Main>.Create(launchArguments, Window.Current.CoreWindow, swapChainPanel);
         }
     }
 }
