@@ -10,7 +10,10 @@ namespace CasseBriques
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private GameServices gs;
+
         public Paddle paddle;
+        public Ball ball;
 
         // Couleurs
         public Color colorXbox;
@@ -27,9 +30,19 @@ namespace CasseBriques
         }
 
         protected override void Initialize()
-        { 
+        {
+            this.gs = new GameServices();
+            this.gs.SetGame(this);
+
             this.paddle = Paddle.GetInstance();
             this.paddle.Init(GraphicsDevice);
+
+            this.ball = new Ball(this.gs);
+            this.ball.Init();
+
+
+
+            
             base.Initialize();
         }
 
@@ -37,6 +50,7 @@ namespace CasseBriques
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             this.paddle.Load(this);
+            this.ball.Load();
         }
 
         protected override void Update(GameTime gameTime)
@@ -59,16 +73,17 @@ namespace CasseBriques
                 }
             }
             this.paddle.Update();
+            this.ball.Update();
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(colorXbox);
+            GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin();
             this.paddle.Draw(_spriteBatch);
-
+            this.ball.Draw(_spriteBatch);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
