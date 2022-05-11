@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -34,11 +35,14 @@ namespace CasseBriques
             this.gs = new GameServices();
             this.gs.SetGame(this);
 
-            this.paddle = Paddle.GetInstance();
-            this.paddle.Init(GraphicsDevice);
+            this.paddle = Paddle.GetInstance(this.gs);
+            this.paddle.Init();
 
             this.ball = new Ball(this.gs);
             this.ball.Init();
+
+            this.gs.SetBall(this.ball);
+            this.gs.SetPaddle(this.paddle);
 
 
 
@@ -49,29 +53,19 @@ namespace CasseBriques
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            this.paddle.Load(this);
+            this.paddle.Load();
             this.ball.Load();
         }
 
         protected override void Update(GameTime gameTime)
         {
+
+            // QUITTER LE JEU
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                if(this.paddle.vel.X >= -20)
-                {
-                    this.paddle.vel.X -= 2;
-                }
-                
-            }else if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                if (this.paddle.vel.X <= 20)
-                {
-                    this.paddle.vel.X += 2;
-                }
-            }
+
+
             this.paddle.Update();
             this.ball.Update();
 
