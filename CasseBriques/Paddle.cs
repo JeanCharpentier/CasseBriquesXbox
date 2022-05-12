@@ -11,11 +11,9 @@ using Windows.Media.ContentRestrictions;
 
 namespace CasseBriques
 {
-    public class Paddle
+    public class Paddle : ICollider
     {
         private static Paddle paddleInstance;
-
-        public GameServices gs;
 
         private Vector2 bounds;
 
@@ -27,32 +25,50 @@ namespace CasseBriques
         public Vector2 vel;
         public Vector2 size;
 
-        private Paddle(GameServices pGS)
+        const int maxSpd = 15;
+        const int maxVel = 15;
+        const float factVel = 1.5f;
+
+
+        private Paddle()
         {
-            this.gs = pGS;
+            ServicesLocator.AddService<ICollider>(this);
         }
 
         public void Init()
         {
-            this.pos = new Vector2(this.gs.theGame.GraphicsDevice.Viewport.Width/2, this.gs.theGame.GraphicsDevice.Viewport.Height - 100);
-            this.spd = new Vector2(2, 2);
+            IMain srvScreen = ServicesLocator.GetService<IMain>();
+            if (srvScreen != null)
+            {
+                this.bounds = srvScreen.GetBounds();
+            }
+            else
+            {
+                this.bounds = new Vector2(800, 600);
+            }
+            this.pos = new Vector2(this.bounds.X / 2, this.bounds.Y - 100);
+            this.spd = new Vector2(1.5f, 1.5f);
             this.vel = new Vector2(0, 0);
-            this.bounds = new Vector2(this.gs.theGame.GraphicsDevice.Viewport.Width, this.gs.theGame.GraphicsDevice.Viewport.Height);
         }
 
         public void Load()
-        {
-            sPaddle = this.gs.theGame.Content.Load<Texture2D>("block_narrow");
+        { 
+            IMain srvMain = ServicesLocator.GetService<IMain>();
+            if(srvMain != null)
+            {
+                sPaddle = srvMain.LoadT2D("block_narrow");
+            }
+            
             size = new Vector2(sPaddle.Width / 2, sPaddle.Height / 2);
 
             rPaddle = new Rectangle((int)pos.X, (int)pos.Y, sPaddle.Width, sPaddle.Height);
         }
 
-        public static Paddle GetInstance(GameServices pGS)
+        public static Paddle GetInstance()
         {
             if(paddleInstance == null)
             {
-                paddleInstance = new Paddle(pGS);
+                paddleInstance = new Paddle();
             }
 
             return paddleInstance;
@@ -62,21 +78,21 @@ namespace CasseBriques
         {
             if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                if (this.vel.X >= -20)
+                if (this.vel.X >= -maxVel)
                 {
-                    this.vel.X -= 2;
+                    this.vel.X -= factVel;
                 }
 
             }else if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                if (this.vel.X <= 20)
+                if (this.vel.X <= maxVel)
                 {
-                    this.vel.X += 2;
+                    this.vel.X += factVel;
                 }
             }
             if ((GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Released && GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Released) || (Keyboard.GetState().IsKeyUp(Keys.Right) && Keyboard.GetState().IsKeyUp(Keys.Left)))
             {
-                this.vel.X = this.gs.Lerp(this.vel.X, 0.0f, 0.07f);
+                this.vel.X = GameServices.Lerp(this.vel.X, 0.0f, 0.07f);
             }
 
             if (pos.X+vel.X >= 0 && pos.X+vel.X <= this.bounds.X)
@@ -88,9 +104,23 @@ namespace CasseBriques
             this.rPaddle.Y = (int)this.pos.Y;
         }
 
-        public void Draw(SpriteBatch pBatch)
+        public void Draw()
         {
-            pBatch.Draw(sPaddle, pos, null, Color.White, 0, size, 1.0f, SpriteEffects.None, 0);
+            IMain srvMain = ServicesLocator.GetService<IMain>();
+            if (srvMain != null)
+            {
+                srvMain.GetSpriteBatch().Draw(sPaddle, pos, null, Color.White, 0, size, 1.0f, SpriteEffects.None, 0);
+            }
+        }
+
+        public Vector2 GetPosition()
+        {
+            return pos;
+        }
+
+        public Rectangle GetCollRect()
+        {
+            return rPaddle;
         }
     }
 }

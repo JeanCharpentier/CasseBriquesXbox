@@ -14,32 +14,46 @@ namespace CasseBriques
     {
         private Texture2D sBall;
 
-        private GameServices gs;
-
         public Vector2 size;
 
         private Vector2 pos;
         private Vector2 spd;
         public Vector2 vel;
+
+        // Read Only : public int x { get; private set; }
+
+
         public Rectangle rBall;
 
         private Vector2 bounds;
 
-        public Ball(GameServices pGS)
+        public Ball()
         {
-            this.gs = pGS;
         }
 
         public void Init()
         {
-            this.pos = new Vector2((this.gs.theGame.GraphicsDevice.Viewport.Width / 2)-20, this.gs.theGame.GraphicsDevice.Viewport.Height - 200);
+            IMain srvMain = ServicesLocator.GetService<IMain>();
+            if (srvMain != null)
+            {
+                this.bounds = srvMain.GetBounds();
+            }
+            else
+            {
+                this.bounds = new Vector2(800, 600);
+            }
+            this.pos = new Vector2((this.bounds.X / 2)-20, this.bounds.Y - 200);
             this.spd = new Vector2(2, 2);
             this.vel = new Vector2(0, 0);
-            this.bounds = this.gs.GetBounds();
         }
         public void Load()
         {
-            this.sBall = this.gs.theGame.Content.Load<Texture2D>("ball_blue_small");
+            IMain srvMain = ServicesLocator.GetService<IMain>();
+            if (srvMain != null)
+            {
+                this.sBall = srvMain.LoadT2D("ball_blue_small");
+            }
+            
             this.size = new Vector2(sBall.Width / 2, sBall.Height / 2);
 
             rBall = new Rectangle((int)pos.X, (int)pos.Y, sBall.Width, sBall.Height);
@@ -47,7 +61,8 @@ namespace CasseBriques
 
         public void Update()
         {
-            if(this.pos.X >= this.bounds.X || this.pos.X <= 0)
+            ICollider srvCollider = ServicesLocator.GetService<ICollider>();
+            if (this.pos.X >= this.bounds.X || this.pos.X <= 0)
             {
                 this.spd.X *= -1;
             }
@@ -60,21 +75,24 @@ namespace CasseBriques
             this.rBall.X = (int)this.pos.X; // Mouvements Rectangle de collision
             this.rBall.Y = (int)this.pos.Y;
 
-            if (this.gs.IsColliding(rBall,this.gs.paddle.rPaddle))
+            if (GameServices.IsColliding(rBall,srvCollider.GetCollRect()))
             {
                 Trace.WriteLine("Collide!");
                 this.spd.Y *= -1;
-                if(rBall.Y > this.gs.paddle.pos.Y)
+                if(rBall.Y > srvCollider.GetPosition().Y) // Replacer la balle au dessus de la raquette
                 {
-                    this.pos.Y = this.gs.paddle.pos.Y - 10;
+                    //this.pos.Y = this.gs.paddle.pos.Y - 10;
                 }
-                //this.gs.theGame.Exit();
             }
         }
 
-        public void Draw(SpriteBatch pBatch)
+        public void Draw()
         {
-            pBatch.Draw(sBall, pos, null, Color.White, 0, size, 1.0f, SpriteEffects.None, 0);
+            IMain srvMain = ServicesLocator.GetService<IMain>();
+            if (srvMain != null)
+            {
+                srvMain.GetSpriteBatch().Draw(sBall, pos, null, Color.White, 0, size, 1.0f, SpriteEffects.None, 0);
+            }
         }
 
         public void ResetPos()

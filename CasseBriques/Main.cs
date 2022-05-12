@@ -6,15 +6,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CasseBriques
 {
-    public class Main : Game
+    public class Main : Game, IMain
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private GameServices gs;
-
-        public Paddle paddle;
-        public Ball ball;
+        public Paddle _paddle;
+        public Ball _ball;
+        public BriquesManager _briqueManager;
 
         // Couleurs
         public Color colorXbox;
@@ -28,24 +27,19 @@ namespace CasseBriques
             IsMouseVisible = true;
 
             colorXbox = new Color(16, 124, 16);
+
+            ServicesLocator.AddService<IMain>(this);
         }
 
         protected override void Initialize()
         {
-            this.gs = new GameServices();
-            this.gs.SetGame(this);
+            this._paddle = Paddle.GetInstance();
+            this._paddle.Init();
 
-            this.paddle = Paddle.GetInstance(this.gs);
-            this.paddle.Init();
+            this._ball = new Ball();
+            this._ball.Init();
 
-            this.ball = new Ball(this.gs);
-            this.ball.Init();
-
-            this.gs.SetBall(this.ball);
-            this.gs.SetPaddle(this.paddle);
-
-
-
+            this._briqueManager = new BriquesManager();
             
             base.Initialize();
         }
@@ -53,8 +47,9 @@ namespace CasseBriques
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            this.paddle.Load();
-            this.ball.Load();
+            this._paddle.Load();
+            this._ball.Load();
+            this._briqueManager.Load();
         }
 
         protected override void Update(GameTime gameTime)
@@ -66,8 +61,9 @@ namespace CasseBriques
 
 
 
-            this.paddle.Update();
-            this.ball.Update();
+            this._paddle.Update();
+            this._ball.Update();
+            
 
             base.Update(gameTime);
         }
@@ -76,10 +72,29 @@ namespace CasseBriques
         {
             GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin();
-            this.paddle.Draw(_spriteBatch);
-            this.ball.Draw(_spriteBatch);
+
+            this._paddle.Draw();
+            this._ball.Draw();
+            this._briqueManager.Draw();
+            
             _spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        public Vector2 GetBounds()
+        {
+            Vector2 bounds = new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            return bounds;
+        }
+
+        public Texture2D LoadT2D(string pTex)
+        {
+            return Content.Load<Texture2D>(pTex);
+        }
+
+        public SpriteBatch GetSpriteBatch()
+        {
+            return _spriteBatch;
         }
     }
 }

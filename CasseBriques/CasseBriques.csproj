@@ -94,13 +94,16 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Ball.cs" />
+    <Compile Include="Briques.cs" />
     <Compile Include="GameServices.cs" />
+    <Compile Include="Interfaces.cs" />
     <Compile Include="Paddle.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServicesLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
