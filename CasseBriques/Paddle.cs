@@ -59,7 +59,7 @@ namespace CasseBriques
                 sPaddle = srvMain.LoadT2D("block_narrow");
             }
 
-            origin = new Vector2(0, 0);
+            origin = new Vector2(sPaddle.Width/2, 0);
 
             rPaddle = new Rectangle((int)pos.X, (int)pos.Y, sPaddle.Width, sPaddle.Height);
         }

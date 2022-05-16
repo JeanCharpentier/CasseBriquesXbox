@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CasseBriques
 {
-    public class Briques : ICollider
+    public class Bricks : ICollider
     {
         public Texture2D sBrique;
 
@@ -18,7 +18,7 @@ namespace CasseBriques
 
         public Rectangle rBrique;
 
-        public Briques() {
+        public Bricks() {
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
@@ -59,28 +59,28 @@ namespace CasseBriques
         public bool DeleteMe()
         {
             Trace.WriteLine("DELETED !");
-            //IManager srvManager = ServicesLocator.GetService<IManager>();
 
             return true;
         }
     }
 
-    public class BriquesManager
+    public class BricksManager : IManager
     {
-        public List<Briques> briquesList;
-        public BriquesManager()
+        public List<Bricks> _bricksList;
+        public BricksManager()
         {
-            briquesList = new List<Briques>();
+            _bricksList = new List<Bricks>();
+            ServicesLocator.AddService<IManager>(this);
         }
 
         public void Load()
         {
             for (int i=0;i<9;i++)
             {
-                Briques b = new Briques();
+                Bricks b = new Bricks();
                 b.pos = new Vector2(100 + (128 * i), 100);
                 b.SetCollRect();
-                this.briquesList.Add(b);    
+                this._bricksList.Add(b);    
             }
         }
 
@@ -91,7 +91,7 @@ namespace CasseBriques
         }
         public void Draw()
         {
-            foreach(Briques b in briquesList)
+            foreach(Bricks b in _bricksList)
             {
                 IMain srvMain = ServicesLocator.GetService<IMain>();
                 if (srvMain != null)
@@ -99,6 +99,19 @@ namespace CasseBriques
                     srvMain.GetSpriteBatch().Draw(b.sBrique, b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
                 }
             }
+        }
+
+        public bool DeleteObject(ICollider pCollider)
+        {
+            for (int i = _bricksList.Count()-1; i >= 1; i--)
+            {
+                if(_bricksList[i].pos == pCollider.GetPosition())
+                {
+                    Trace.WriteLine("Brique trouvée !");
+                    _bricksList.Remove(_bricksList[i]);
+                }
+            }
+            return true;
         }
     }
 }

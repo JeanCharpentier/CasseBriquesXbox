@@ -75,12 +75,18 @@ namespace CasseBriques
             this.rBall.Y = (int)this.pos.Y;
         }
 
-        public void UpdateColl(ICollider pCollider)
+        public void UpdateColl(ICollider pCollider) // Test des collisions
         {
             if (CustomFunctions.IsColliding(rBall, pCollider.GetCollRect()))
             {
                 this.spd.Y *= -1;
-                Trace.WriteLine(pCollider.GetType());
+                if(pCollider is Bricks)
+                {
+                    IManager srvBricks = ServicesLocator.GetService<IManager>();
+                    srvBricks.DeleteObject(pCollider);
+                    //(ICollider)pCollider => Brique passer au briqueManager
+                }
+
             }
         }
 

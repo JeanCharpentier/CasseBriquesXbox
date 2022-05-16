@@ -14,7 +14,7 @@ namespace CasseBriques
 
         public Paddle _paddle;
         public Ball _ball;
-        public BriquesManager _briqueManager;
+        public BricksManager _briqueManager;
 
         // Couleurs
         public Color colorXbox;
@@ -40,7 +40,7 @@ namespace CasseBriques
             this._ball = new Ball();
             this._ball.Init();
 
-            this._briqueManager = new BriquesManager();
+            this._briqueManager = new BricksManager();
             
             base.Initialize();
         }
@@ -67,9 +67,9 @@ namespace CasseBriques
 
             // Collisions
             this._ball.UpdateColl(_paddle);
-            foreach (Briques b in _briqueManager.briquesList)
+            for(int i = _briqueManager._bricksList.Count-1;i>=1;i--)
             {
-                this._ball.UpdateColl(b);
+                this._ball.UpdateColl(_briqueManager._bricksList[i]);
             }
             
             

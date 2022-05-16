@@ -21,3 +21,8 @@ public interface ICollider
 
     bool DeleteMe();
 }
+
+public interface IManager
+{
+    bool DeleteObject(ICollider pCollider);
+}
