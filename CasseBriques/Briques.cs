@@ -14,9 +14,9 @@ namespace CasseBriques
         public Texture2D sBrique;
 
         public Vector2 pos;
-        public Vector2 size;
+        public Vector2 origin;
 
-        private Rectangle rBrique;
+        public Rectangle rBrique;
 
         public Briques() {
             IMain srvMain = ServicesLocator.GetService<IMain>();
@@ -28,13 +28,18 @@ namespace CasseBriques
                 Trace.WriteLine("!!! Echec de chargement de l'image de brique");
             }
 
-            size = new Vector2(sBrique.Width / 2, sBrique.Height / 2);
+            origin = new Vector2(0, 0);
             
         }
 
         public void SetCollRect()
         {
             rBrique = new Rectangle((int)pos.X, (int)pos.Y, sBrique.Width, sBrique.Height);
+        }
+
+        public void Update()
+        {
+
         }
         public void Draw()
         {
@@ -54,23 +59,29 @@ namespace CasseBriques
 
     public class BriquesManager
     {
-        public Briques[] briquesList;
+        public List<Briques> briquesList;
         public BriquesManager()
         {
-            briquesList = new Briques[10];
+            briquesList = new List<Briques>();
         }
 
         public void Load()
         {
-            for (int i=0;i<10;i++)
+            for (int i=0;i<7;i++)
             {
                 Briques b = new Briques();
                 b.pos = new Vector2(100 + (128 * i), 100);
                 b.SetCollRect();
-                this.briquesList[i] = b;
+                this.briquesList.Add(b);
+                Trace.WriteLine("Retc :" + b.pos.Y);
             }
         }
 
+
+        public void Update()
+        {
+
+        }
         public void Draw()
         {
             foreach(Briques b in briquesList)
@@ -78,7 +89,7 @@ namespace CasseBriques
                 IMain srvMain = ServicesLocator.GetService<IMain>();
                 if (srvMain != null)
                 {
-                    srvMain.GetSpriteBatch().Draw(b.sBrique, b.pos, null, Color.White, 0, b.size, 1.0f, SpriteEffects.None, 0);
+                    srvMain.GetSpriteBatch().Draw(b.sBrique, b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
                 }
             }
         }

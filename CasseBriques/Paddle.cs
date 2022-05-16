@@ -23,7 +23,7 @@ namespace CasseBriques
         public Vector2 pos;
         public Vector2 spd;
         public Vector2 vel;
-        public Vector2 size;
+        public Vector2 origin;
 
         const int maxSpd = 15;
         const int maxVel = 15;
@@ -58,8 +58,8 @@ namespace CasseBriques
             {
                 sPaddle = srvMain.LoadT2D("block_narrow");
             }
-            
-            size = new Vector2(sPaddle.Width / 2, sPaddle.Height / 2);
+
+            origin = new Vector2(0, 0);
 
             rPaddle = new Rectangle((int)pos.X, (int)pos.Y, sPaddle.Width, sPaddle.Height);
         }
@@ -109,7 +109,7 @@ namespace CasseBriques
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
-                srvMain.GetSpriteBatch().Draw(sPaddle, pos, null, Color.White, 0, size, 1.0f, SpriteEffects.None, 0);
+                srvMain.GetSpriteBatch().Draw(sPaddle, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
             }
         }
 

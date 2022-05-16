@@ -14,7 +14,7 @@ namespace CasseBriques
     {
         private Texture2D sBall;
 
-        public Vector2 size;
+        public Vector2 origin;
 
         private Vector2 pos;
         private Vector2 spd;
@@ -54,14 +54,13 @@ namespace CasseBriques
                 this.sBall = srvMain.LoadT2D("ball_blue_small");
             }
             
-            this.size = new Vector2(sBall.Width / 2, sBall.Height / 2);
+            origin = new Vector2(0,0);
 
             rBall = new Rectangle((int)pos.X, (int)pos.Y, sBall.Width, sBall.Height);
         }
 
         public void Update()
         {
-            ICollider srvCollider = ServicesLocator.GetService<ICollider>();
             if (this.pos.X >= this.bounds.X || this.pos.X <= 0)
             {
                 this.spd.X *= -1;
@@ -74,15 +73,14 @@ namespace CasseBriques
 
             this.rBall.X = (int)this.pos.X; // Mouvements Rectangle de collision
             this.rBall.Y = (int)this.pos.Y;
+        }
 
-            if (GameServices.IsColliding(rBall,srvCollider.GetCollRect()))
+        public void UpdateColl(ICollider pCollider)
+        {
+            if (GameServices.IsColliding(rBall, pCollider.GetCollRect()))
             {
-                Trace.WriteLine("Collide!");
+                Trace.WriteLine("Collide : " + pCollider.GetPosition().Y);
                 this.spd.Y *= -1;
-                if(rBall.Y > srvCollider.GetPosition().Y) // Replacer la balle au dessus de la raquette
-                {
-                    //this.pos.Y = this.gs.paddle.pos.Y - 10;
-                }
             }
         }
 
@@ -91,13 +89,8 @@ namespace CasseBriques
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
-                srvMain.GetSpriteBatch().Draw(sBall, pos, null, Color.White, 0, size, 1.0f, SpriteEffects.None, 0);
+                srvMain.GetSpriteBatch().Draw(sBall, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
             }
-        }
-
-        public void ResetPos()
-        {
-
         }
     }
 }

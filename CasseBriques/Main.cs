@@ -64,6 +64,14 @@ namespace CasseBriques
 
             this._paddle.Update();
             this._ball.Update();
+
+            // Collisions
+            this._ball.UpdateColl(_paddle);
+            foreach (Briques b in _briqueManager.briquesList)
+            {
+                this._ball.UpdateColl(b);
+            }
+            
             
 
             base.Update(gameTime);
