@@ -18,4 +18,6 @@ public interface ICollider
 {
     Vector2 GetPosition();
     Rectangle GetCollRect();
+
+    bool DeleteMe();
 }

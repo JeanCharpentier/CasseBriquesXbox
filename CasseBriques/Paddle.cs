@@ -122,5 +122,10 @@ namespace CasseBriques
         {
             return rPaddle;
         }
+
+        public bool DeleteMe()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -55,6 +55,14 @@ namespace CasseBriques
         {
             return pos;
         }
+
+        public bool DeleteMe()
+        {
+            Trace.WriteLine("DELETED !");
+            //IManager srvManager = ServicesLocator.GetService<IManager>();
+
+            return true;
+        }
     }
 
     public class BriquesManager
@@ -67,13 +75,12 @@ namespace CasseBriques
 
         public void Load()
         {
-            for (int i=0;i<7;i++)
+            for (int i=0;i<9;i++)
             {
                 Briques b = new Briques();
                 b.pos = new Vector2(100 + (128 * i), 100);
                 b.SetCollRect();
-                this.briquesList.Add(b);
-                Trace.WriteLine("Retc :" + b.pos.Y);
+                this.briquesList.Add(b);    
             }
         }
 
@@ -93,6 +100,5 @@ namespace CasseBriques
                 }
             }
         }
-
     }
 }

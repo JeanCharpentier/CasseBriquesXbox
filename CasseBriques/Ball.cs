@@ -79,8 +79,8 @@ namespace CasseBriques
         {
             if (GameServices.IsColliding(rBall, pCollider.GetCollRect()))
             {
-                Trace.WriteLine("Collide : " + pCollider.GetPosition().Y);
                 this.spd.Y *= -1;
+                Trace.WriteLine(pCollider.GetType());
             }
         }
 
