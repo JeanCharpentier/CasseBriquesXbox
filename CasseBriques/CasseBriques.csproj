@@ -95,7 +95,7 @@
     </Compile>
     <Compile Include="Ball.cs" />
     <Compile Include="Briques.cs" />
-    <Compile Include="GameServices.cs" />
+    <Compile Include="CustomFunctions.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Paddle.cs" />
     <Compile Include="Main.cs" />

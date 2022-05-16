@@ -77,7 +77,7 @@ namespace CasseBriques
 
         public void UpdateColl(ICollider pCollider)
         {
-            if (GameServices.IsColliding(rBall, pCollider.GetCollRect()))
+            if (CustomFunctions.IsColliding(rBall, pCollider.GetCollRect()))
             {
                 this.spd.Y *= -1;
                 Trace.WriteLine(pCollider.GetType());

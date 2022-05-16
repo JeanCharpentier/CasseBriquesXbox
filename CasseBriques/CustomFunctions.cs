@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 namespace CasseBriques
 {
     //public static class GameServices // N'a pas besoin du new !!! Donc pas a passer en parametre
-    public static class GameServices
+    public static class CustomFunctions
     {
         public static float Lerp(float a, float b, float factor)
         {

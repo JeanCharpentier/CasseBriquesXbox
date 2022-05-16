@@ -92,7 +92,7 @@ namespace CasseBriques
             }
             if ((GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Released && GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Released) || (Keyboard.GetState().IsKeyUp(Keys.Right) && Keyboard.GetState().IsKeyUp(Keys.Left)))
             {
-                this.vel.X = GameServices.Lerp(this.vel.X, 0.0f, 0.07f);
+                this.vel.X = CustomFunctions.Lerp(this.vel.X, 0.0f, 0.07f);
             }
 
             if (pos.X+vel.X >= 0 && pos.X+vel.X <= this.bounds.X)
