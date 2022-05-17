@@ -19,7 +19,9 @@ namespace CasseBriques
         private Vector2 pos;
         public Vector2 oldPos;
         private Vector2 spd;
+        private int speed;
         public Vector2 vel;
+        private float angle;
 
         // Read Only : public int x { get; private set; }
 
@@ -45,7 +47,10 @@ namespace CasseBriques
             }
             this.pos = new Vector2((this.bounds.X / 2)-20, this.bounds.Y - 200);
             this.spd = new Vector2(2, 2);
+            
             this.vel = new Vector2(0, 0);
+            angle = MathF.PI*(7.0f/4.0f);
+            speed = 6;
         }
         public void Load()
         {
@@ -62,37 +67,83 @@ namespace CasseBriques
 
         public void Update()
         {
-            oldPos = pos;
 
-            if (this.pos.X >= this.bounds.X || this.pos.X <= 0)
+            if(angle >= MathF.PI * 2) // Clamp l'angle à moins de 2*PI
             {
-                this.spd.X *= -1;
+                angle = angle - (MathF.PI * 2);
             }
-            if (this.pos.Y >= this.bounds.Y || this.pos.Y <= 0)
+
+
+            //Trace.WriteLine("Angle : " + angle);
+            if (this.pos.X >= this.bounds.X-sBall.Width || this.pos.X <= 0)
             {
-                this.spd.Y *= -1;
+                angle = MathF.PI - angle;
+                //pos.X = oldPos.X - (sBall.Width/2);
             }
-            this.pos += this.spd;
+            if (this.pos.Y >= this.bounds.Y-sBall.Height || this.pos.Y <= 0)
+            {
+                angle = MathF.PI*(3.0f/2.0f) + angle;
+                //pos.Y = oldPos.Y-(sBall.Height/2);
+            }
+
+            Vector2 v = new Vector2(speed * MathF.Cos(angle), speed * MathF.Sin(angle));
+            pos += v;
 
             this.rBall.X = (int)this.pos.X; // Mouvements Rectangle de collision
             this.rBall.Y = (int)this.pos.Y;
+
+            oldPos = pos; // Garde l'ancienne position pour affiner les rebonds
         }
 
         public void UpdateColl(ICollider pCollider) // Test des collisions
         {
             if (CustomFunctions.IsColliding(rBall, pCollider.GetCollRect()))
             {
-                pos = oldPos;
-                spd.Y *= -1;
-
-
-                if(pCollider is Brick)
+                angle = angle + CustomFunctions.RndFloat(0.01f, 0.06f); // Un peu de random dans le rebondiou !
+                if (pCollider is Brick)
                 {
                     IManager srvBricks = ServicesLocator.GetService<IManager>();
                     srvBricks.DeleteObject(pCollider);
                     //(ICollider)pCollider => Brique passer au briqueManager
+                    if (angle >= MathF.PI * 1.5f)
+                    {
+                        angle = (MathF.PI / 2) + angle;
+                    }
+                    else
+                    {
+                        angle = MathF.PI + angle;
+                    }
                 }
 
+                if(pCollider is Paddle)
+                {
+                    pos.Y = oldPos.Y - (sBall.Height/4); //Repositionne la balle pour éviter les overlap buggués
+
+                    //Trace.WriteLine("Angle : " + angle);
+                    if(rBall.X <= pCollider.GetPosition().X) // Centre de la raquette
+                    {
+                        Trace.WriteLine("Touche à gauche !");
+                        if(angle >= MathF.PI * 1.5f)
+                        {
+                            angle = MathF.PI + angle; // Renvoit à 180°
+                        }else
+                        {
+                            angle = (MathF.PI/2) + angle;
+                        }
+                    }
+                    else
+                    {
+                        Trace.WriteLine("Touche à droite !");
+                        if (angle >= MathF.PI * 1.5f)
+                        {
+                            angle = (MathF.PI / 2) + angle;
+                        }
+                        else
+                        {
+                            angle = MathF.PI + angle;
+                        }
+                    }
+                }
             }
         }
 

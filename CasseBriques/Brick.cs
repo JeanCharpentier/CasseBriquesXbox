@@ -108,7 +108,7 @@ namespace CasseBriques
             {
                 if(_bricksList[i].pos == pCollider.GetPosition())
                 {
-                    Trace.WriteLine("Brique trouvée à : "+pCollider.GetPosition());
+                    //Trace.WriteLine("Brique trouvée à : "+pCollider.GetPosition());
                     _bricksList.Remove(_bricksList[i]);
                 }
             }

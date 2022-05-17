@@ -17,6 +17,12 @@ namespace CasseBriques
         {
             return a.Intersects(b);
         }
+
+        public static float RndFloat(float pMin, float pMax)
+        {
+            Random rnd = new Random();
+            return (float)((rnd.NextDouble()*(pMax - pMin))+pMin);
+        }
     }
 }
  

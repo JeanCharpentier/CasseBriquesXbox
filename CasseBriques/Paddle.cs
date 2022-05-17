@@ -100,7 +100,7 @@ namespace CasseBriques
                 pos.X += vel.X;
             }
 
-            this.rPaddle.X = (int)this.pos.X; // Mouvements Rectangle de collision
+            this.rPaddle.X = (int)this.pos.X - (int)origin.X; // Mouvements Rectangle de collision
             this.rPaddle.Y = (int)this.pos.Y;
         }
 
