@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 
 namespace CasseBriques
 {
-    public class Bricks : ICollider
+    public class Brick : ICollider
     {
-        public Texture2D sBrique;
+        public Texture2D sBrick;
 
         public Vector2 pos;
         public Vector2 origin;
 
-        public Rectangle rBrique;
+        public Rectangle rBrick;
 
-        public Bricks() {
+        public Brick() {
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
-                this.sBrique = srvMain.LoadT2D("button_yellow");
+                this.sBrick = srvMain.LoadT2D("button_yellow"); // Chargée à chaque nouvelle brique !!! A REVOIR !
             }else
             {
                 Trace.WriteLine("!!! Echec de chargement de l'image de brique");
@@ -34,7 +34,8 @@ namespace CasseBriques
 
         public void SetCollRect()
         {
-            rBrique = new Rectangle((int)pos.X, (int)pos.Y, sBrique.Width, sBrique.Height);
+            rBrick = new Rectangle((int)pos.X, (int)pos.Y, sBrick.Width, sBrick.Height);
+            Trace.WriteLine("Rect Brick : " + rBrick);
         }
 
         public void Update()
@@ -48,7 +49,7 @@ namespace CasseBriques
 
         public Rectangle GetCollRect()
         {
-            return rBrique;
+            return rBrick;
         }
 
         public Vector2 GetPosition()
@@ -66,10 +67,10 @@ namespace CasseBriques
 
     public class BricksManager : IManager
     {
-        public List<Bricks> _bricksList;
+        public List<Brick> _bricksList;
         public BricksManager()
         {
-            _bricksList = new List<Bricks>();
+            _bricksList = new List<Brick>();
             ServicesLocator.AddService<IManager>(this);
         }
 
@@ -77,7 +78,7 @@ namespace CasseBriques
         {
             for (int i=0;i<9;i++)
             {
-                Bricks b = new Bricks();
+                Brick b = new Brick();
                 b.pos = new Vector2(100 + (128 * i), 100);
                 b.SetCollRect();
                 this._bricksList.Add(b);    
@@ -91,23 +92,23 @@ namespace CasseBriques
         }
         public void Draw()
         {
-            foreach(Bricks b in _bricksList)
+            foreach(Brick b in _bricksList)
             {
                 IMain srvMain = ServicesLocator.GetService<IMain>();
                 if (srvMain != null)
                 {
-                    srvMain.GetSpriteBatch().Draw(b.sBrique, b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
+                    srvMain.GetSpriteBatch().Draw(b.sBrick, b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
                 }
             }
         }
 
         public bool DeleteObject(ICollider pCollider)
         {
-            for (int i = _bricksList.Count()-1; i >= 1; i--)
+            for (int i = _bricksList.Count-1; i >= 0; i--)
             {
                 if(_bricksList[i].pos == pCollider.GetPosition())
                 {
-                    Trace.WriteLine("Brique trouvée !");
+                    Trace.WriteLine("Brique trouvée à : "+pCollider.GetPosition());
                     _bricksList.Remove(_bricksList[i]);
                 }
             }

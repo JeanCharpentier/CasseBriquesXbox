@@ -61,7 +61,7 @@ namespace CasseBriques
 
             origin = new Vector2(sPaddle.Width/2, 0);
 
-            rPaddle = new Rectangle((int)pos.X, (int)pos.Y, sPaddle.Width, sPaddle.Height);
+            rPaddle = new Rectangle((int)pos.X-(int)origin.X, (int)pos.Y, sPaddle.Width, sPaddle.Height);
         }
 
         public static Paddle GetInstance()

@@ -17,6 +17,7 @@ namespace CasseBriques
         public Vector2 origin;
 
         private Vector2 pos;
+        public Vector2 oldPos;
         private Vector2 spd;
         public Vector2 vel;
 
@@ -61,6 +62,8 @@ namespace CasseBriques
 
         public void Update()
         {
+            oldPos = pos;
+
             if (this.pos.X >= this.bounds.X || this.pos.X <= 0)
             {
                 this.spd.X *= -1;
@@ -79,8 +82,11 @@ namespace CasseBriques
         {
             if (CustomFunctions.IsColliding(rBall, pCollider.GetCollRect()))
             {
-                this.spd.Y *= -1;
-                if(pCollider is Bricks)
+                pos = oldPos;
+                spd.Y *= -1;
+
+
+                if(pCollider is Brick)
                 {
                     IManager srvBricks = ServicesLocator.GetService<IManager>();
                     srvBricks.DeleteObject(pCollider);
