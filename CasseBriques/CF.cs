@@ -1,11 +1,12 @@
-﻿using System;
+﻿// Fonctions persos !
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace CasseBriques
 {
-    public static class CustomFunctions // N'a pas besoin du new !!! Donc pas a passer en parametre
+    public static class CF // N'a pas besoin du new !!! Donc pas a passer en parametre
     {
         public static float Lerp(float a, float b, float factor)
         {

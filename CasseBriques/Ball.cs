@@ -46,8 +46,8 @@ namespace CasseBriques
             {
                 this.bounds = new Vector2(800, 600);
             }
-            this.pos = new Vector2((this.bounds.X / 2)-20, this.bounds.Y - 200);
-            this.spd = new Vector2(2, 2);
+            this.pos = new Vector2((this.bounds.X / 2)-20, this.bounds.Y - 400);
+            this.spd = new Vector2(6, 6);
             
             this.vel = new Vector2(0, 0);
             angle = MathF.PI*(7.0f/4.0f);
@@ -61,44 +61,38 @@ namespace CasseBriques
                 this.sBall = srvMain.LoadT2D("ball_blue_small");
             }
             
-            origin = new Vector2(0,0);
+            origin = new Vector2(sBall.Width/2, sBall.Height/2);
 
             rBall = new Rectangle((int)pos.X, (int)pos.Y, sBall.Width, sBall.Height);
         }
 
         public void Update()
         {
-
-            if(angle >= MathF.PI * 2) // Clamp l'angle à moins de 2*PI
-            {
-                angle = angle - (MathF.PI * 2);
-            }
-
-
-            //Trace.WriteLine("Angle : " + angle);
             if (this.pos.X >= this.bounds.X-sBall.Width || this.pos.X <= 0)
             {
-                angle = MathF.PI - angle;
+                //angle = MathF.PI - angle;
                 //pos.X = oldPos.X - (sBall.Width/2);
+                spd.X *= -1;
             }
             if (this.pos.Y >= this.bounds.Y-sBall.Height || this.pos.Y <= 0)
             {
-                angle = MathF.PI*(3.0f/2.0f) + angle;
-                //pos.Y = oldPos.Y-(sBall.Height/2);
+                //angle = MathF.PI*(3.0f/2.0f) + angle;
+                //pos.Y = oldPos.Y - (sBall.Height/2);
+                spd.Y *= -1;
             }
 
             Vector2 v = new Vector2(speed * MathF.Cos(angle), speed * MathF.Sin(angle));
-            pos += v;
+            pos += spd;
 
-            this.rBall.X = (int)this.pos.X; // Mouvements Rectangle de collision
-            this.rBall.Y = (int)this.pos.Y;
+            rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
+            rBall.Y = (int)pos.Y - (int)origin.Y;
 
             oldPos = pos; // Garde l'ancienne position pour affiner les rebonds
         }
 
         public void UpdateColl(ICollider pCollider) // Test des collisions
         {
-            if (CustomFunctions.IsColliding(rBall, pCollider.GetCollRect()))
+            if (CF.IsColliding(rBall, pCollider.GetCollRect()))
             {
                 //angle = angle + CustomFunctions.RndFloat(0.01f, 0.06f); // Un peu de random dans le rebondiou !
                 if (pCollider is Brick)
@@ -106,39 +100,23 @@ namespace CasseBriques
                     IManager srvBricks = ServicesLocator.GetService<IManager>();
                     srvBricks.DeleteObject(pCollider);
                     //(ICollider)pCollider => Brique passer au briqueManager
-                    if (angle >= MathF.PI * 1.5f)
-                    {
-                        angle = (MathF.PI / 2) + angle;
-                    }
-                    else
-                    {
-                        angle = MathF.PI + angle;
-                    }
+                    spd.Y *= -1;
                 }
 
                 if(pCollider is Paddle)
                 {
-                    pos.Y = oldPos.Y - (sBall.Height); //Repositionne la balle pour éviter les overlap buggués
+                    float ballDist = CF.Dist2(pos, pCollider.GetPosition());
+                    int deg = 10;
 
-
-                    // pourcentage d'inclinaison
-
-
-                    float angleOffset = (CustomFunctions.Dist2(pos, pCollider.GetPosition())*MathF.PI)/1000;
-                    Trace.WriteLine("AngleOffset : " + angleOffset);
-
-                    if (rBall.X <= pCollider.GetPosition().X) // Centre de la raquette
+                    if(spd.X > 0) // Vient de la gauche
                     {
-                        
-                        angle = MathF.PI + angleOffset;
-                        Trace.WriteLine("Touche à : " + CustomFunctions.Dist2(pos, pCollider.GetPosition()).ToString());
-                    }
-                    else
+                        deg = 10;
+                    }else // Vient de la droite
                     {
-                        angle = MathF.PI + angleOffset;
-                        Trace.WriteLine("Touche à : " + CustomFunctions.Dist2(pos, pCollider.GetPosition()).ToString());
-
+                        deg = -10;
                     }
+                    spd.Y *= -1;
+                    spd.X = deg * (ballDist / 100);
                 }
             }
         }
