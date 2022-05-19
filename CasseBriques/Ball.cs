@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.Direct2D1;
 
 namespace CasseBriques
 {
@@ -99,7 +100,7 @@ namespace CasseBriques
         {
             if (CustomFunctions.IsColliding(rBall, pCollider.GetCollRect()))
             {
-                angle = angle + CustomFunctions.RndFloat(0.01f, 0.06f); // Un peu de random dans le rebondiou !
+                //angle = angle + CustomFunctions.RndFloat(0.01f, 0.06f); // Un peu de random dans le rebondiou !
                 if (pCollider is Brick)
                 {
                     IManager srvBricks = ServicesLocator.GetService<IManager>();
@@ -117,31 +118,26 @@ namespace CasseBriques
 
                 if(pCollider is Paddle)
                 {
-                    pos.Y = oldPos.Y - (sBall.Height/4); //Repositionne la balle pour éviter les overlap buggués
+                    pos.Y = oldPos.Y - (sBall.Height); //Repositionne la balle pour éviter les overlap buggués
 
-                    //Trace.WriteLine("Angle : " + angle);
-                    if(rBall.X <= pCollider.GetPosition().X) // Centre de la raquette
+
+                    // pourcentage d'inclinaison
+
+
+                    float angleOffset = (CustomFunctions.Dist2(pos, pCollider.GetPosition())*MathF.PI)/1000;
+                    Trace.WriteLine("AngleOffset : " + angleOffset);
+
+                    if (rBall.X <= pCollider.GetPosition().X) // Centre de la raquette
                     {
-                        Trace.WriteLine("Touche à gauche !");
-                        if(angle >= MathF.PI * 1.5f)
-                        {
-                            angle = MathF.PI + angle; // Renvoit à 180°
-                        }else
-                        {
-                            angle = (MathF.PI/2) + angle;
-                        }
+                        
+                        angle = MathF.PI + angleOffset;
+                        Trace.WriteLine("Touche à : " + CustomFunctions.Dist2(pos, pCollider.GetPosition()).ToString());
                     }
                     else
                     {
-                        Trace.WriteLine("Touche à droite !");
-                        if (angle >= MathF.PI * 1.5f)
-                        {
-                            angle = (MathF.PI / 2) + angle;
-                        }
-                        else
-                        {
-                            angle = MathF.PI + angle;
-                        }
+                        angle = MathF.PI + angleOffset;
+                        Trace.WriteLine("Touche à : " + CustomFunctions.Dist2(pos, pCollider.GetPosition()).ToString());
+
                     }
                 }
             }

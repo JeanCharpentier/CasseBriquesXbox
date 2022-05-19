@@ -5,8 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CasseBriques
 {
-    //public static class GameServices // N'a pas besoin du new !!! Donc pas a passer en parametre
-    public static class CustomFunctions
+    public static class CustomFunctions // N'a pas besoin du new !!! Donc pas a passer en parametre
     {
         public static float Lerp(float a, float b, float factor)
         {
@@ -22,6 +21,11 @@ namespace CasseBriques
         {
             Random rnd = new Random();
             return (float)((rnd.NextDouble()*(pMax - pMin))+pMin);
+        }
+
+        public static float Dist2(Vector2 a, Vector2 b)
+        {
+            return Vector2.Distance(a,b);
         }
     }
 }
