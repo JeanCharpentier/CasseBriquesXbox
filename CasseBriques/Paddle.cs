@@ -127,5 +127,15 @@ namespace CasseBriques
         {
             throw new NotImplementedException();
         }
+
+        public int GetLife()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetLife(int pLife)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

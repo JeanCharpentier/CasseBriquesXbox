@@ -70,14 +70,10 @@ namespace CasseBriques
         {
             if (this.pos.X >= this.bounds.X-sBall.Width || this.pos.X <= 0)
             {
-                //angle = MathF.PI - angle;
-                //pos.X = oldPos.X - (sBall.Width/2);
                 spd.X *= -1;
             }
             if (this.pos.Y >= this.bounds.Y-sBall.Height || this.pos.Y <= 0)
             {
-                //angle = MathF.PI*(3.0f/2.0f) + angle;
-                //pos.Y = oldPos.Y - (sBall.Height/2);
                 spd.Y *= -1;
             }
 
@@ -94,18 +90,34 @@ namespace CasseBriques
         {
             if (CF.IsColliding(rBall, pCollider.GetCollRect()))
             {
-                //angle = angle + CustomFunctions.RndFloat(0.01f, 0.06f); // Un peu de random dans le rebondiou !
                 if (pCollider is Brick)
                 {
-                    IManager srvBricks = ServicesLocator.GetService<IManager>();
-                    srvBricks.DeleteObject(pCollider);
-                    //(ICollider)pCollider => Brique passer au briqueManager
-                    spd.Y *= -1;
+                    int brickLife = pCollider.GetLife();
+                    if(brickLife > 0)
+                    {
+                        pCollider.SetLife(brickLife - 1);
+                    }else
+                    {
+                        IManager srvBricks = ServicesLocator.GetService<IManager>(); // Détruit la brique
+                        srvBricks.DeleteObject(pCollider);
+                    }
+                    if(pos.X <= pCollider.GetPosition().X || pos.X >= pCollider.GetPosition().X + pCollider.GetCollRect().Width)
+                    {
+                        spd.X *= -1;
+                        
+                    }else
+                    {
+                        spd.Y *= -1;
+                    }
+                    
                 }
 
                 if(pCollider is Paddle)
                 {
-                    float ballDist = CF.Dist2(pos, pCollider.GetPosition());
+                    Vector2 paddleLoc = pCollider.GetPosition();
+                    Rectangle paddleRect = pCollider.GetCollRect();
+
+                    float ballDist = CF.Dist2(pos, paddleLoc);
                     int deg = 10;
 
                     if(spd.X > 0) // Vient de la gauche
@@ -115,8 +127,19 @@ namespace CasseBriques
                     {
                         deg = -10;
                     }
+
                     spd.Y *= -1;
                     spd.X = deg * (ballDist / 100);
+
+                    if (pos.X >= paddleLoc.X + (paddleRect.Width/2))
+                    {
+                        pos.X += sBall.Width/8;
+                    }else if(pos.X <= paddleLoc.X - (paddleRect.Width / 2))
+                    {
+                        pos.X -= sBall.Width / 8;
+                    }
+
+                    
                 }
             }
         }

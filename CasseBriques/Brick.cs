@@ -11,40 +11,37 @@ namespace CasseBriques
 {
     public class Brick : ICollider
     {
-        public Texture2D sBrick;
+        public Texture2D[] sBrick;
 
         public Vector2 pos;
         public Vector2 origin;
 
         public Rectangle rBrick;
 
+        public int life;
+
         public Brick() {
+
+            sBrick = new Texture2D[3];
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
-                this.sBrick = srvMain.LoadT2D("button_yellow"); // Chargée à chaque nouvelle brique !!! A REVOIR !
-            }else
+                sBrick[0] = srvMain.LoadT2D("button_yellow"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+                sBrick[1] = srvMain.LoadT2D("button_blue"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+                sBrick[2] = srvMain.LoadT2D("button_grey"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+            }
+            else
             {
                 Trace.WriteLine("!!! Echec de chargement de l'image de brique");
             }
 
             origin = new Vector2(0, 0);
-            
+            life = 2; // Points de vie - 1
         }
 
         public void SetCollRect()
         {
-            rBrick = new Rectangle((int)pos.X, (int)pos.Y, sBrick.Width, sBrick.Height);
-            Trace.WriteLine("Rect Brick : " + rBrick);
-        }
-
-        public void Update()
-        {
-
-        }
-        public void Draw()
-        {
-
+            rBrick = new Rectangle((int)pos.X, (int)pos.Y, sBrick[0].Width, sBrick[0].Height);
         }
 
         public Rectangle GetCollRect()
@@ -63,6 +60,17 @@ namespace CasseBriques
 
             return true;
         }
+
+        public int GetLife()
+        {
+            return life;
+        }
+
+        public bool SetLife(int pLife)
+        {
+            life = pLife;
+            return true;
+        }
     }
 
     public class BricksManager : IManager
@@ -76,12 +84,15 @@ namespace CasseBriques
 
         public void Load()
         {
-            for (int i=0;i<9;i++)
+            for (int i=0;i<5;i++)
             {
-                Brick b = new Brick();
-                b.pos = new Vector2(100 + (128 * i), 100);
-                b.SetCollRect();
-                this._bricksList.Add(b);    
+                for(int j = 0; j < 4; j++)
+                {
+                    Brick b = new Blue();
+                    b.pos = new Vector2(100 + (200 * i), 100+ (100 * j));
+                    b.SetCollRect();
+                    this._bricksList.Add(b);
+                }    
             }
         }
 
@@ -94,10 +105,11 @@ namespace CasseBriques
         {
             foreach(Brick b in _bricksList)
             {
+
                 IMain srvMain = ServicesLocator.GetService<IMain>();
                 if (srvMain != null)
                 {
-                    srvMain.GetSpriteBatch().Draw(b.sBrick, b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
+                    srvMain.GetSpriteBatch().Draw(b.sBrick[b.life], b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
                 }
             }
         }
@@ -108,11 +120,40 @@ namespace CasseBriques
             {
                 if(_bricksList[i].pos == pCollider.GetPosition())
                 {
-                    //Trace.WriteLine("Brique trouvée à : "+pCollider.GetPosition());
+                    if(_bricksList[i] is Blue) // Test des explosions de briques
+                    {
+                        Trace.WriteLine("Boom !");
+                    }
                     _bricksList.Remove(_bricksList[i]);
                 }
             }
             return true;
         }
     }
+
+    public class Yellow : Brick
+    {
+        public Yellow()
+        {
+            life = 0;
+        }
+    }
+
+    public class Blue : Brick
+    {
+        public Blue()
+        {
+            life = 1;
+        }
+    }
+
+    public class Grey : Brick
+    {
+        public Grey()
+        {
+            life = 2;
+        }
+    }
+
+
 }
