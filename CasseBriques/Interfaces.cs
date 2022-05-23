@@ -10,7 +10,6 @@ public interface IMain
 {
     Vector2 GetBounds();
     Texture2D LoadT2D(string pTex);
-
     SpriteBatch GetSpriteBatch();
 }
 
@@ -21,7 +20,7 @@ public interface ICollider
 
     bool ManageLife();
 
-    bool DeleteMe();
+   // bool DeleteMe();
 }
 
 public interface IManager

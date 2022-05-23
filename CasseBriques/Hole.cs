@@ -31,7 +31,6 @@ namespace CasseBriques
                 origin = new Vector2(sHole.Width / 2, sHole.Height / 2);
             }
             rHole = new Rectangle((int)pos.X - (int)origin.X, (int)pos.Y - (int)origin.Y, (int)sHole.Width, (int)sHole.Height);
-            Debug.WriteLine(rHole);
         }
 
         public void Draw()
@@ -42,11 +41,6 @@ namespace CasseBriques
                 srvMain.GetSpriteBatch().Draw(sHole, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
             }
         }
-        public bool DeleteMe()
-        {
-            throw new NotImplementedException();
-        }
-
         public Rectangle GetCollRect()
         {
             return rHole;

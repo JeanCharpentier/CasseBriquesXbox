@@ -81,7 +81,8 @@ namespace CasseBriques
             // Collisions
             _ball.UpdateColl(_paddle);
 
-            
+            _ball.UpdateColl(_hole);
+
             try
             {
                 for (int i = _briqueManager._bricksList.Count-1; i >= 0; i--)

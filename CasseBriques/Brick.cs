@@ -68,12 +68,6 @@ namespace CasseBriques
             return pos;
         }
 
-        public bool DeleteMe()
-        {
-            Trace.WriteLine("DELETED !");
-
-            return true;
-        }
         public bool ManageLife()
         {
             if(life > 0)
@@ -165,7 +159,6 @@ namespace CasseBriques
             foreach(Brick b in _bricksList)
             {
                 b.Update();
-                //b.sprite = b.life;
             }
 
 
