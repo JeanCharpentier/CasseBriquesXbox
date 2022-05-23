@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace CasseBriques
 {
@@ -19,16 +20,24 @@ namespace CasseBriques
         public Rectangle rBrick;
 
         public int life;
+        public int sprite;
+
+        public Vector2 gridPosition;
+
 
         public Brick() {
 
-            sBrick = new Texture2D[3];
+            sBrick = new Texture2D[7];
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
                 sBrick[0] = srvMain.LoadT2D("button_yellow"); // Chargée à chaque nouvelle brique !!! A REVOIR !
                 sBrick[1] = srvMain.LoadT2D("button_blue"); // Chargée à chaque nouvelle brique !!! A REVOIR !
                 sBrick[2] = srvMain.LoadT2D("button_grey"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+                sBrick[3] = srvMain.LoadT2D("button_darkgrey"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+                sBrick[4] = srvMain.LoadT2D("button_green"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+                sBrick[5] = srvMain.LoadT2D("button_pink"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+                sBrick[6] = srvMain.LoadT2D("button_red"); // Chargée à chaque nouvelle brique !!! A REVOIR !
             }
             else
             {
@@ -36,9 +45,14 @@ namespace CasseBriques
             }
 
             origin = new Vector2(0, 0);
-            life = 2; // Points de vie - 1
+            life = 0; // Points de vie - 1
         }
 
+
+        public void Update()
+        {
+           //sprite = life;
+        }
         public void SetCollRect()
         {
             rBrick = new Rectangle((int)pos.X, (int)pos.Y, sBrick[0].Width, sBrick[0].Height);
@@ -60,15 +74,18 @@ namespace CasseBriques
 
             return true;
         }
-
-        public int GetLife()
+        public bool ManageLife()
         {
-            return life;
-        }
+            if(life > 0)
+            {
+                life--;
+                sprite--;
+            }else
+            {
+                IManager srvBricks = ServicesLocator.GetService<IManager>(); // Détruit la brique
+                srvBricks.DeleteObject(this);
+            }
 
-        public bool SetLife(int pLife)
-        {
-            life = pLife;
             return true;
         }
     }
@@ -76,29 +93,81 @@ namespace CasseBriques
     public class BricksManager : IManager
     {
         public List<Brick> _bricksList;
+        public string[] level;
+
+        public List<Brick> _spooler; // Liste des briques a supprimer !
+
         public BricksManager()
         {
             _bricksList = new List<Brick>();
+            _spooler = new List<Brick>();
             ServicesLocator.AddService<IManager>(this);
         }
 
         public void Load()
         {
-            for (int i=0;i<5;i++)
+            level = File.ReadAllLines("Levels/level1.txt");
+            int lines = 0;
+            foreach(var line in level)
             {
-                for(int j = 0; j < 4; j++)
+                int cols = 0;
+                string[] columns = line.Split(',');
+                foreach(string id in columns)
                 {
-                    Brick b = new Blue();
-                    b.pos = new Vector2(100 + (200 * i), 100+ (100 * j));
-                    b.SetCollRect();
-                    this._bricksList.Add(b);
-                }    
+                    Brick b;
+                    switch(id)
+                    {
+                        case "0":
+                            b = null;
+                            break;
+                        case "1":
+                            b = new Yellow();
+                            break;
+                        case "2":
+                            b = new Blue();
+                            break;
+                        case "3":
+                            b = new Grey();
+                            break;
+                        case "4":
+                            b = new DarkGrey();
+                            break;
+                        case "5":
+                            b = new Green();
+                            break;
+                        case "6":
+                            b = new Pink();
+                            break;
+                        case "7":
+                            b = new Red();
+                            break;
+                        default:
+                            b = null;
+                            break;
+                    }
+                    if (b != null)
+                    {
+                        b.pos = new Vector2(64 + (128 * cols), 20 + (53 * lines));
+                        b.SetCollRect();
+                        b.gridPosition = new Vector2(cols, lines);
+                        _bricksList.Add(b);
+                        //Trace.WriteLine("Brique créée : " + b.gridPosition.ToString());
+                    }
+                    cols++;
+                    
+                }
+                lines++;
             }
         }
 
-
         public void Update()
         {
+            foreach(Brick b in _bricksList)
+            {
+                b.Update();
+                //b.sprite = b.life;
+            }
+
 
         }
         public void Draw()
@@ -109,22 +178,57 @@ namespace CasseBriques
                 IMain srvMain = ServicesLocator.GetService<IMain>();
                 if (srvMain != null)
                 {
-                    srvMain.GetSpriteBatch().Draw(b.sBrick[b.life], b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
+                    srvMain.GetSpriteBatch().Draw(b.sBrick[b.sprite], b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
                 }
             }
         }
 
         public bool DeleteObject(ICollider pCollider)
         {
-            for (int i = _bricksList.Count-1; i >= 0; i--)
+            float colPosX = pCollider.GetPosition().X;
+            float colPosY = pCollider.GetPosition().Y;
+
+            colPosX = MathF.Floor((colPosX - 64) / 128);
+            colPosY = MathF.Floor((colPosY - 20) / 53);
+
+            Vector2 colPos = new Vector2(colPosX, colPosY);
+
+            if (pCollider is Red)
             {
-                if(_bricksList[i].pos == pCollider.GetPosition())
+                
+                for (int i = _bricksList.Count-1; i >= 0; i--)
                 {
-                    if(_bricksList[i] is Blue) // Test des explosions de briques
+                    if (_bricksList[i].gridPosition.X == colPosX && _bricksList[i].gridPosition.Y == colPosY - 1)
                     {
-                        Trace.WriteLine("Boom !");
+                        _spooler.Add(_bricksList[i]);
                     }
-                    _bricksList.Remove(_bricksList[i]);
+                    else if (_bricksList[i].gridPosition.X == colPosX - 1 && _bricksList[i].gridPosition.Y == colPosY)
+                    {
+                        _spooler.Add(_bricksList[i]);
+                    }
+                    else if (_bricksList[i].gridPosition.X == colPosX && _bricksList[i].gridPosition.Y == colPosY)
+                    {
+                        _spooler.Add(_bricksList[i]);
+                    }
+                    else if (_bricksList[i].gridPosition.X == colPosX + 1 && _bricksList[i].gridPosition.Y == colPosY) 
+                    {
+                        _spooler.Add(_bricksList[i]);
+                    }
+                    else if (_bricksList[i].gridPosition.X == colPosX && _bricksList[i].gridPosition.Y == colPosY + 1)
+                    {
+                        _spooler.Add(_bricksList[i]);
+                    }
+                }
+
+            }
+            else
+            {
+                for (int i = _bricksList.Count - 1; i >= 0; i--)
+                {
+                    if (_bricksList[i].gridPosition == colPos)
+                    {
+                        _spooler.Add(_bricksList[i]);
+                    }
                 }
             }
             return true;
@@ -136,6 +240,7 @@ namespace CasseBriques
         public Yellow()
         {
             life = 0;
+            sprite = life;
         }
     }
 
@@ -144,6 +249,7 @@ namespace CasseBriques
         public Blue()
         {
             life = 1;
+            sprite = life;
         }
     }
 
@@ -152,6 +258,43 @@ namespace CasseBriques
         public Grey()
         {
             life = 2;
+            sprite = life;
+        }
+    }
+
+    public class DarkGrey : Brick
+    {
+        public DarkGrey()
+        {
+            life = 3;
+            sprite = life;
+        }
+    }
+
+    public class Green : Brick
+    {
+        public Green()
+        {
+            life = 4;
+            sprite = life;
+        }
+    }
+
+    public class Pink : Brick
+    {
+        public Pink()
+        {
+            life = 5;
+            sprite = life;
+        }
+    }
+
+    public class Red : Brick
+    {
+        public Red()
+        {
+            life = 0;
+            sprite = 6;
         }
     }
 

@@ -25,7 +25,7 @@ namespace CasseBriques
         public Vector2 vel;
         public Vector2 origin;
 
-        const int maxSpd = 15;
+        //const int maxSpd = 15;
         const int maxVel = 15;
         const float factVel = 1.5f;
 
@@ -128,12 +128,7 @@ namespace CasseBriques
             throw new NotImplementedException();
         }
 
-        public int GetLife()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SetLife(int pLife)
+        public bool ManageLife()
         {
             throw new NotImplementedException();
         }

@@ -16,6 +16,9 @@ namespace CasseBriques
         public Ball _ball;
         public BricksManager _briqueManager;
 
+        public Landscape _landscape;
+        public Hole _hole;
+
         // Couleurs
         public Color colorXbox;
 
@@ -34,48 +37,71 @@ namespace CasseBriques
 
         protected override void Initialize()
         {
-            this._paddle = Paddle.GetInstance();
-            this._paddle.Init();
+            // Taille de l'écran fixe
+            _graphics.IsFullScreen = false; // A REVOIR POUR LA XBOX, Tester en 1080p ?
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.ApplyChanges();
 
-            this._ball = new Ball();
-            this._ball.Init();
+            _paddle = Paddle.GetInstance();
+            _paddle.Init();
 
-            this._briqueManager = new BricksManager();
-            
+            _ball = new Ball();
+            _ball.Init();
+
+            _briqueManager = new BricksManager();
+
+            _landscape = new Landscape();
+            _landscape.Init();
+
+            _hole = new Hole();
+            _hole.Init();
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            this._paddle.Load();
-            this._ball.Load();
-            this._briqueManager.Load();
+            _paddle.Load();
+            _ball.Load();
+            _briqueManager.Load();
         }
 
         protected override void Update(GameTime gameTime)
         {
-
             // QUITTER LE JEU
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
 
 
-            this._paddle.Update();
-            //this._ball.Update();
+            _paddle.Update();
 
             // Collisions
-            this._ball.UpdateColl(_paddle);
+            _ball.UpdateColl(_paddle);
 
-
-            for(int i = _briqueManager._bricksList.Count-1;i>=0;i--)
+            
+            try
             {
-                this._ball.UpdateColl(_briqueManager._bricksList[i]);
+                for (int i = _briqueManager._bricksList.Count-1; i >= 0; i--)
+                {                           
+                    _ball.UpdateColl(_briqueManager._bricksList[i]);
+                }
             }
 
-            this._ball.Update();
+            catch (ArgumentException e)
+            {
+                Debug.WriteLine("Index :", e.Message);
+            }
+            
+            for (int i = _briqueManager._spooler.Count - 1;i>=0;i--) // Suppression des briques à supprimer de la liste (cpt Obvious)
+            {
+                _briqueManager._bricksList.Remove(_briqueManager._spooler[i]);
+            }
+            _briqueManager._spooler.Clear();
 
+            _ball.Update();
 
 
             base.Update(gameTime);
@@ -86,9 +112,13 @@ namespace CasseBriques
             GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin();
 
-            this._paddle.Draw();
-            this._ball.Draw();
-            this._briqueManager.Draw();
+            _landscape.Draw();
+            _hole.Draw();
+
+            _paddle.Draw();
+            _ball.Draw();
+            _briqueManager.Draw();
+
             
             _spriteBatch.End();
             base.Draw(gameTime);
@@ -97,6 +127,7 @@ namespace CasseBriques
         public Vector2 GetBounds()
         {
             Vector2 bounds = new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            
             return bounds;
         }
 

@@ -96,7 +96,9 @@
     <Compile Include="Ball.cs" />
     <Compile Include="Brick.cs" />
     <Compile Include="CF.cs" />
+    <Compile Include="Hole.cs" />
     <Compile Include="Interfaces.cs" />
+    <Compile Include="Landscape.cs" />
     <Compile Include="Paddle.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GamePage.xaml.cs">
@@ -111,6 +113,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Levels\level1.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

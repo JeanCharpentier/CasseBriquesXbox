@@ -24,6 +24,8 @@ namespace CasseBriques
         public Vector2 vel;
         private float angle;
 
+        private bool isMoving;
+
         // Read Only : public int x { get; private set; }
 
 
@@ -33,6 +35,7 @@ namespace CasseBriques
 
         public Ball()
         {
+            isMoving = false;
         }
 
         public void Init()
@@ -46,7 +49,7 @@ namespace CasseBriques
             {
                 this.bounds = new Vector2(800, 600);
             }
-            this.pos = new Vector2((this.bounds.X / 2)-20, this.bounds.Y - 400);
+            this.pos = new Vector2((this.bounds.X / 2)-20, this.bounds.Y - 200);
             this.spd = new Vector2(6, 6);
             
             this.vel = new Vector2(0, 0);
@@ -68,22 +71,36 @@ namespace CasseBriques
 
         public void Update()
         {
-            if (this.pos.X >= this.bounds.X-sBall.Width || this.pos.X <= 0)
+            if (isMoving)
             {
-                spd.X *= -1;
-            }
-            if (this.pos.Y >= this.bounds.Y-sBall.Height || this.pos.Y <= 0)
+                if (this.pos.X >= this.bounds.X - sBall.Width || this.pos.X <= 0)
+                {
+                    spd.X *= -1;
+                }
+                if (this.pos.Y >= this.bounds.Y - sBall.Height || this.pos.Y <= 0)
+                {
+                    spd.Y *= -1;
+                }
+
+                Vector2 v = new Vector2(speed * MathF.Cos(angle), speed * MathF.Sin(angle));
+                pos += spd;
+
+                rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
+                rBall.Y = (int)pos.Y - (int)origin.Y;
+
+                oldPos = pos; // Garde l'ancienne position pour affiner les rebonds
+            }else if(!isMoving && (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.A)))
             {
-                spd.Y *= -1;
+                isMoving = true;
+            }else if (!isMoving)
+            {
+                ICollider srvPaddle = ServicesLocator.GetService<ICollider>();
+                if(srvPaddle != null && srvPaddle is Paddle)
+                {
+                    pos.X = srvPaddle.GetPosition().X;
+                    pos.Y = srvPaddle.GetPosition().Y - (sBall.Height/2);
+                }
             }
-
-            Vector2 v = new Vector2(speed * MathF.Cos(angle), speed * MathF.Sin(angle));
-            pos += spd;
-
-            rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
-            rBall.Y = (int)pos.Y - (int)origin.Y;
-
-            oldPos = pos; // Garde l'ancienne position pour affiner les rebonds
         }
 
         public void UpdateColl(ICollider pCollider) // Test des collisions
@@ -92,16 +109,8 @@ namespace CasseBriques
             {
                 if (pCollider is Brick)
                 {
-                    int brickLife = pCollider.GetLife();
-                    if(brickLife > 0)
-                    {
-                        pCollider.SetLife(brickLife - 1);
-                    }else
-                    {
-                        IManager srvBricks = ServicesLocator.GetService<IManager>(); // Détruit la brique
-                        srvBricks.DeleteObject(pCollider);
-                    }
-                    if(pos.X <= pCollider.GetPosition().X || pos.X >= pCollider.GetPosition().X + pCollider.GetCollRect().Width)
+                    pCollider.ManageLife();
+                    if (pos.X <= pCollider.GetPosition().X || pos.X >= pCollider.GetPosition().X + pCollider.GetCollRect().Width)
                     {
                         spd.X *= -1;
                         
@@ -137,9 +146,12 @@ namespace CasseBriques
                     }else if(pos.X <= paddleLoc.X - (paddleRect.Width / 2))
                     {
                         pos.X -= sBall.Width / 8;
-                    }
+                    }   
+                }
 
-                    
+                if(pCollider is Hole)
+                {
+                    Debug.WriteLine("Fn de NIVEAU !! GG !");
                 }
             }
         }

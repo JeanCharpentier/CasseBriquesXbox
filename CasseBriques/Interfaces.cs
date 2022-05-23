@@ -19,8 +19,7 @@ public interface ICollider
     Vector2 GetPosition();
     Rectangle GetCollRect();
 
-    int GetLife();
-    bool SetLife(int pLife);
+    bool ManageLife();
 
     bool DeleteMe();
 }
