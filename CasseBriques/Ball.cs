@@ -142,16 +142,18 @@ namespace CasseBriques
 
                     if (pos.X >= paddleLoc.X + (paddleRect.Width/2))
                     {
-                        pos.X += sBall.Width/8;
+                        pos.X += sBall.Width / 2;
+                        spd.X *= -1;
                     }else if(pos.X <= paddleLoc.X - (paddleRect.Width / 2))
                     {
-                        pos.X -= sBall.Width / 8;
-                    }   
+                        pos.X -= sBall.Width / 2;
+                        spd.X *= -1;
+                    }
                 }
 
                 if(pCollider is Hole)
                 {
-                    Debug.WriteLine("Fn de NIVEAU !! GG !");
+                    Debug.WriteLine("Fin de NIVEAU !! GG !");
                 }
             }
         }
