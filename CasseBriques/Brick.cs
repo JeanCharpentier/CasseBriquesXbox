@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 
 [DataContract]
 public class bricksJSON
@@ -23,7 +24,6 @@ namespace CasseBriques
         public List<Brick> _bricksList;
 
         public Texture2D[] _spritelist;
-        public string[] level;
 
         public List<Brick> _spooler; // Liste des briques a supprimer !
 
@@ -36,9 +36,9 @@ namespace CasseBriques
 
         public void Load()
         {
-
-            level = File.ReadAllLines("Levels/level1.txt");
-
+            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText("Levels/level1.json")));
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(bricksJSON));
+            bricksJSON myBrickJSON = (bricksJSON)ser.ReadObject(stream);
 
             _spritelist = new Texture2D[8];
             IMain srvMain = ServicesLocator.GetService<IMain>();
@@ -58,8 +58,10 @@ namespace CasseBriques
                 Trace.WriteLine("!!! Echec de chargement de l'image de brique");
             }
 
+            string[] lignes = myBrickJSON.map.Split('/');
+            Debug.WriteLine(lignes[0]);
             int lines = 0;
-            foreach(var line in level)
+            foreach(var line in lignes)
             {
                 int cols = 0;
                 string[] columns = line.Split(',');

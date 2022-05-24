@@ -99,6 +99,7 @@
     <Compile Include="Entity.cs" />
     <Compile Include="Hole.cs" />
     <Compile Include="Interfaces.cs" />
+    <Compile Include="JsonManager.cs" />
     <Compile Include="Landscape.cs" />
     <Compile Include="Paddle.cs" />
     <Compile Include="Main.cs" />
@@ -156,11 +157,7 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties levels_4level1_1json__JsonSchema="https://appsemble.app/api.json" />
-    </VisualStudio>
-  </ProjectExtensions>
+  <ProjectExtensions />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
