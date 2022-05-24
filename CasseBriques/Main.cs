@@ -12,6 +12,8 @@ namespace CasseBriques
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        public JsonManager _JsonManager;
+
         public Paddle _paddle;
         public Ball _ball;
         public BricksManager _briqueManager;
@@ -42,6 +44,8 @@ namespace CasseBriques
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
+
+            _JsonManager = new JsonManager();
 
             _paddle = Paddle.GetInstance();
             _paddle.Init();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CasseBriques;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -26,4 +27,10 @@ public interface ICollider
 public interface IManager
 {
     bool DeleteObject(ICollider pCollider);
+}
+
+public interface IJson
+{
+    JsonManager ReadJson(string pFile);
+
 }

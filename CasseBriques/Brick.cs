@@ -10,13 +10,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 
-[DataContract]
-public class bricksJSON
-{
-    [DataMember]
-    public string map;
-}
-
 namespace CasseBriques
 {
     public class BricksManager : IManager
@@ -36,10 +29,6 @@ namespace CasseBriques
 
         public void Load()
         {
-            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText("Levels/level1.json")));
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(bricksJSON));
-            bricksJSON myBrickJSON = (bricksJSON)ser.ReadObject(stream);
-
             _spritelist = new Texture2D[8];
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
@@ -58,8 +47,8 @@ namespace CasseBriques
                 Trace.WriteLine("!!! Echec de chargement de l'image de brique");
             }
 
-            string[] lignes = myBrickJSON.map.Split('/');
-            Debug.WriteLine(lignes[0]);
+            IJson srvJson = ServicesLocator.GetService<IJson>();
+            string[] lignes = srvJson.ReadJson("Levels/level1.json").map.Split('/');
             int lines = 0;
             foreach(var line in lignes)
             {
