@@ -122,11 +122,11 @@ namespace CasseBriques
                 IMain srvMain = ServicesLocator.GetService<IMain>();
                 if (srvMain != null)
                 {
-                    if(b.sprite < 0)
+                    if(b.sprNum < 0)
                     {
-                        b.sprite = 0;
+                        b.sprNum = 0;
                     }
-                    srvMain.GetSpriteBatch().Draw(_spritelist[b.sprite], b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
+                    srvMain.GetSpriteBatch().Draw(_spritelist[b.sprNum], b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
                 }
             }
         }
@@ -147,7 +147,7 @@ namespace CasseBriques
                 {
                     if (_bricksList[i].gridPosition.X == colPosX && _bricksList[i].gridPosition.Y == colPosY - 1)
                     {
-                        if(_bricksList[i] is Grey) // Limitation C# 7.3 sinon "is not"
+                        if(_bricksList[i] is Grey) // Limitation C# 7.3 sinon "is not" en C# 9.0+
                         {
 
                         }else
@@ -157,7 +157,7 @@ namespace CasseBriques
                     }
                     else if (_bricksList[i].gridPosition.X == colPosX - 1 && _bricksList[i].gridPosition.Y == colPosY)
                     {
-                        if (_bricksList[i] is Grey) // Limitation C# 7.3 sinon "is not"
+                        if (_bricksList[i] is Grey) // Limitation C# 7.3 sinon "is not" en C# 9.0+
                         {
 
                         }
@@ -168,7 +168,7 @@ namespace CasseBriques
                     }
                     else if (_bricksList[i].gridPosition.X == colPosX && _bricksList[i].gridPosition.Y == colPosY)
                     {
-                        if (_bricksList[i] is Grey) // Limitation C# 7.3 sinon "is not"
+                        if (_bricksList[i] is Grey) // Limitation C# 7.3 sinon "is not" en C# 9.0+
                         {
 
                         }
@@ -179,7 +179,7 @@ namespace CasseBriques
                     }
                     else if (_bricksList[i].gridPosition.X == colPosX + 1 && _bricksList[i].gridPosition.Y == colPosY) 
                     {
-                        if (_bricksList[i] is Grey) // Limitation C# 7.3 sinon "is not"
+                        if (_bricksList[i] is Grey) // Limitation C# 7.3 sinon "is not" en C# 9.0+
                         {
 
                         }
@@ -190,7 +190,7 @@ namespace CasseBriques
                     }
                     else if (_bricksList[i].gridPosition.X == colPosX && _bricksList[i].gridPosition.Y == colPosY + 1)
                     {
-                        if (_bricksList[i] is Grey) // Limitation C# 7.3 sinon "is not"
+                        if (_bricksList[i] is Grey) // Limitation C# 7.3 sinon "is not" en C# 9.0+
                         {
 
                         }
@@ -200,7 +200,6 @@ namespace CasseBriques
                         }
                     }
                 }
-
             }
             else
             {
@@ -218,25 +217,22 @@ namespace CasseBriques
 
 
 
-    public abstract class Brick : ICollider
+    public abstract class Brick : Entity,ICollider
     {
         //public Texture2D[] sBrick;
-        public Texture2D sBrick;
-
-        public Vector2 pos;
-        public Vector2 origin;
+        //public Texture2D sBrick;
 
         public Rectangle rBrick;
 
         public int life;
-        public int sprite;
+        public int sprNum;
 
         public Vector2 gridPosition;
 
 
-        public Brick(Texture2D pTexture)
+        public Brick(Texture2D pSprite):base(pSprite)
         {
-            sBrick = pTexture;
+            //sBrick = pSprite;
             origin = new Vector2(0, 0);
         }
 
@@ -247,7 +243,7 @@ namespace CasseBriques
         }
         public void SetCollRect()
         {
-            rBrick = new Rectangle((int)pos.X, (int)pos.Y, sBrick.Width, sBrick.Height);
+            rBrick = new Rectangle((int)pos.X, (int)pos.Y, sprite.Width, sprite.Height);
         }
 
         public Rectangle GetCollRect()
@@ -265,7 +261,7 @@ namespace CasseBriques
             if (life > 0)
             {
                 life--;
-                sprite--;
+                sprNum--;
             }
             else
             {
@@ -281,7 +277,7 @@ namespace CasseBriques
         public Yellow(Texture2D pTexture) : base(pTexture)
         {
             life = 4;
-            sprite = life;
+            sprNum = life;
         }
 
     }
@@ -291,6 +287,7 @@ namespace CasseBriques
         public Blue(Texture2D pTexture) : base(pTexture)
         {
             life = 2;
+            sprNum = life;
         }
     }
 
@@ -299,7 +296,7 @@ namespace CasseBriques
         public Violet(Texture2D pTexture) : base(pTexture)
         {
             life = 0;
-            sprite = life;
+            sprNum = life;
         }
     }
 
@@ -308,7 +305,7 @@ namespace CasseBriques
         public Indigo(Texture2D pTexture) : base(pTexture)
         {
             life = 1;
-            sprite = life;
+            sprNum = life;
         }
     }
 
@@ -317,7 +314,7 @@ namespace CasseBriques
         public Green(Texture2D pTexture) : base(pTexture)
         {
             life = 3;
-            sprite = life;
+            sprNum = life;
         }
     }
 
@@ -326,7 +323,7 @@ namespace CasseBriques
         public Orange(Texture2D pTexture) : base(pTexture)
         {
             life = 5;
-            sprite = life;
+            sprNum = life;
         }
     }
 
@@ -335,7 +332,7 @@ namespace CasseBriques
         public Red(Texture2D pTexture) : base(pTexture)
         {
             life = 0;
-            sprite = 6;
+            sprNum = 6;
         }
     }
 
@@ -344,7 +341,7 @@ namespace CasseBriques
         public Grey(Texture2D pTexture) : base(pTexture)
         {
             life = 0;
-            sprite = 7;
+            sprNum = 7;
         }
 
         public override bool ManageLife()

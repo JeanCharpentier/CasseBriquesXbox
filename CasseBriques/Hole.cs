@@ -9,28 +9,19 @@ using System.Threading.Tasks;
 
 namespace CasseBriques
 {
-    public class Hole:ICollider
+    public class Hole:Entity,ICollider
     {
-        public Texture2D sHole;
-
-        public Vector2 pos;
-        Vector2 origin;
         public Rectangle rHole;
-        public Hole()
+        public Hole(Texture2D pTexture):base(pTexture)
         {
             
         }
 
         public void Init()
         {
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
-            {
-                sHole = srvMain.LoadT2D("hole_large_end_alt");
-                pos = new Vector2(srvMain.GetBounds().X / 2, srvMain.GetBounds().Y / 2);
-                origin = new Vector2(sHole.Width / 2, sHole.Height / 2);
-            }
-            rHole = new Rectangle((int)pos.X - (int)origin.X, (int)pos.Y - (int)origin.Y, (int)sHole.Width, (int)sHole.Height);
+            pos = new Vector2(bounds.X / 2, bounds.Y / 2);
+            origin = new Vector2(sprite.Width / 2, sprite.Height / 2);
+            rHole = new Rectangle((int)pos.X - (int)origin.X, (int)pos.Y - (int)origin.Y, (int)sprite.Width, (int)sprite.Height);
         }
 
         public void Draw()
@@ -38,7 +29,7 @@ namespace CasseBriques
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
-                srvMain.GetSpriteBatch().Draw(sHole, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
+                srvMain.GetSpriteBatch().Draw(sprite, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
             }
         }
         public Rectangle GetCollRect()

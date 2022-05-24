@@ -11,13 +11,10 @@ using SharpDX.Direct2D1;
 
 namespace CasseBriques
 {
-    public class Ball
+    public class Ball:Entity
     {
-        private Texture2D sBall;
+        //private Texture2D sBall;
 
-        public Vector2 origin;
-
-        private Vector2 pos;
         public Vector2 oldPos;
         private Vector2 spd;
         private int speed;
@@ -31,53 +28,42 @@ namespace CasseBriques
 
         public Rectangle rBall;
 
-        private Vector2 bounds;
-
-        public Ball()
+        public Ball(Texture2D pTexture):base(pTexture)
         {
             isMoving = false;
         }
 
         public void Init()
         {
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
-            {
-                this.bounds = srvMain.GetBounds();
-            }
-            else
-            {
-                this.bounds = new Vector2(800, 600);
-            }
-            this.pos = new Vector2((this.bounds.X / 2)-20, this.bounds.Y - 200);
-            this.spd = new Vector2(6, 6);
+            pos = new Vector2((bounds.X / 2)-20, bounds.Y - 200);
+            spd = new Vector2(6, 6);
             
-            this.vel = new Vector2(0, 0);
+            vel = new Vector2(0, 0);
             angle = MathF.PI*(7.0f/4.0f);
             speed = 6;
         }
         public void Load()
         {
-            IMain srvMain = ServicesLocator.GetService<IMain>();
+            /*IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
-                this.sBall = srvMain.LoadT2D("ball_blue_small");
-            }
+                sBall = srvMain.LoadT2D("ball_blue_small");
+            }*/
             
-            origin = new Vector2(sBall.Width/2, sBall.Height/2);
+            origin = new Vector2(sprite.Width/2, sprite.Height/2);
 
-            rBall = new Rectangle((int)pos.X, (int)pos.Y, sBall.Width, sBall.Height);
+            rBall = new Rectangle((int)pos.X, (int)pos.Y, sprite.Width, sprite.Height);
         }
 
         public void Update()
         {
             if (isMoving)
             {
-                if (this.pos.X >= this.bounds.X - sBall.Width || this.pos.X <= 0)
+                if (pos.X >= bounds.X - sprite.Width || pos.X <= 0)
                 {
                     spd.X *= -1;
                 }
-                if (this.pos.Y >= this.bounds.Y - sBall.Height || this.pos.Y <= 0)
+                if (pos.Y >= bounds.Y - sprite.Height || pos.Y <= 0)
                 {
                     spd.Y *= -1;
                 }
@@ -98,7 +84,7 @@ namespace CasseBriques
                 if(srvPaddle != null && srvPaddle is Paddle)
                 {
                     pos.X = srvPaddle.GetPosition().X;
-                    pos.Y = srvPaddle.GetPosition().Y - (sBall.Height/2);
+                    pos.Y = srvPaddle.GetPosition().Y - (sprite.Height/2);
                 }
             }
         }
@@ -142,11 +128,11 @@ namespace CasseBriques
 
                     if (pos.X >= paddleLoc.X + (paddleRect.Width/2))
                     {
-                        pos.X += sBall.Width / 2;
+                        pos.X += sprite.Width / 2;
                         spd.X *= -1;
                     }else if(pos.X <= paddleLoc.X - (paddleRect.Width / 2))
                     {
-                        pos.X -= sBall.Width / 2;
+                        pos.X -= sprite.Width / 2;
                         spd.X *= -1;
                     }
                 }
@@ -163,7 +149,7 @@ namespace CasseBriques
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
-                srvMain.GetSpriteBatch().Draw(sBall, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
+                srvMain.GetSpriteBatch().Draw(sprite, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
             }
         }
     }

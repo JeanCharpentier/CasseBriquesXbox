@@ -46,7 +46,7 @@ namespace CasseBriques
             _paddle = Paddle.GetInstance();
             _paddle.Init();
 
-            _ball = new Ball();
+            _ball = new Ball(LoadT2D("ball_blue_small")); // A REVOIR !!!
             _ball.Init();
 
             _briqueManager = new BricksManager();
@@ -54,7 +54,7 @@ namespace CasseBriques
             _landscape = new Landscape();
             _landscape.Init();
 
-            _hole = new Hole();
+            _hole = new Hole(LoadT2D("hole_large_end_alt")); // A REVOIR !!!
             _hole.Init();
 
             base.Initialize();

@@ -11,64 +11,57 @@ using Windows.Media.ContentRestrictions;
 
 namespace CasseBriques
 {
-    public class Paddle : ICollider
+    public class Paddle : Entity,ICollider
     {
         private static Paddle paddleInstance;
 
-        private Vector2 bounds;
 
-        public Texture2D sPaddle;
+        //public Texture2D sPaddle;
         public Rectangle rPaddle; // Rectangle de collision
 
-        public Vector2 pos;
         public Vector2 spd;
         public Vector2 vel;
-        public Vector2 origin;
 
-        //const int maxSpd = 15;
         const int maxVel = 15;
         const float factVel = 1.5f;
 
 
-        private Paddle()
+        private Paddle(Texture2D pTexture):base(pTexture)
         {
             ServicesLocator.AddService<ICollider>(this);
         }
 
         public void Init()
         {
-            IMain srvScreen = ServicesLocator.GetService<IMain>();
-            if (srvScreen != null)
-            {
-                this.bounds = srvScreen.GetBounds();
-            }
-            else
-            {
-                this.bounds = new Vector2(800, 600);
-            }
-            this.pos = new Vector2(this.bounds.X / 2, this.bounds.Y - 100);
-            this.spd = new Vector2(1.5f, 1.5f);
-            this.vel = new Vector2(0, 0);
+            pos = new Vector2(this.bounds.X / 2, this.bounds.Y - 100);
+            spd = new Vector2(1.5f, 1.5f);
+            vel = new Vector2(0, 0);
         }
 
         public void Load()
         { 
-            IMain srvMain = ServicesLocator.GetService<IMain>();
+            /*IMain srvMain = ServicesLocator.GetService<IMain>();
             if(srvMain != null)
             {
                 sPaddle = srvMain.LoadT2D("block_narrow");
-            }
+            }*/
 
-            origin = new Vector2(sPaddle.Width/2, 0);
+            origin = new Vector2(sprite.Width/2, 0);
 
-            rPaddle = new Rectangle((int)pos.X-(int)origin.X, (int)pos.Y, sPaddle.Width, sPaddle.Height);
+            rPaddle = new Rectangle((int)pos.X-(int)origin.X, (int)pos.Y, sprite.Width, sprite.Height);
         }
 
         public static Paddle GetInstance()
         {
             if(paddleInstance == null)
             {
-                paddleInstance = new Paddle();
+                IMain srvMain = ServicesLocator.GetService<IMain>();
+                if (srvMain != null)
+                {
+                    Texture2D sPaddle;
+                    sPaddle = srvMain.LoadT2D("block_narrow");
+                    paddleInstance = new Paddle(sPaddle);
+                }
             }
 
             return paddleInstance;
@@ -109,7 +102,7 @@ namespace CasseBriques
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
-                srvMain.GetSpriteBatch().Draw(sPaddle, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
+                srvMain.GetSpriteBatch().Draw(sprite, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
             }
         }
 

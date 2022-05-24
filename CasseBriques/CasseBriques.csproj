@@ -96,6 +96,7 @@
     <Compile Include="Ball.cs" />
     <Compile Include="Brick.cs" />
     <Compile Include="CF.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="Hole.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Landscape.cs" />
@@ -142,6 +143,9 @@
     </PackageReference>
     <PackageReference Include="MonoGame.Framework.WindowsUniversal" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Levels\level1.json" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
