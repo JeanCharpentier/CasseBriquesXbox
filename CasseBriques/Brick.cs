@@ -7,6 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Runtime.Serialization;
+
+[DataContract]
+public class bricksJSON
+{
+    [DataMember]
+    public string map;
+}
 
 namespace CasseBriques
 {
@@ -16,7 +24,6 @@ namespace CasseBriques
 
         public Texture2D[] _spritelist;
         public string[] level;
-
 
         public List<Brick> _spooler; // Liste des briques a supprimer !
 
@@ -31,6 +38,7 @@ namespace CasseBriques
         {
 
             level = File.ReadAllLines("Levels/level1.txt");
+
 
             _spritelist = new Texture2D[8];
             IMain srvMain = ServicesLocator.GetService<IMain>();

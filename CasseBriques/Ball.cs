@@ -96,15 +96,25 @@ namespace CasseBriques
                 if (pCollider is Brick)
                 {
                     pCollider.ManageLife();
-                    if (pos.X <= pCollider.GetPosition().X || pos.X >= pCollider.GetPosition().X + pCollider.GetCollRect().Width)
+                    if (pos.X <= pCollider.GetPosition().X)
                     {
                         spd.X *= -1;
-                        
-                    }else
+                        pos.X -= sprite.Width / 4;                        
+                    }else if(pos.X >= pCollider.GetPosition().X + pCollider.GetCollRect().Width)
+                    {
+                        spd.X *= -1;
+                        pos.X += sprite.Width / 4;
+                    }
+                    else if (pos.Y <= pCollider.GetPosition().Y)
                     {
                         spd.Y *= -1;
+                        pos.Y -= sprite.Height / 4;
                     }
-                    
+                    else if (pos.Y >= pCollider.GetPosition().Y + pCollider.GetCollRect().Height)
+                    {
+                        spd.Y *= -1;
+                        pos.Y += sprite.Height / 4;
+                    }
                 }
 
                 if(pCollider is Paddle)
