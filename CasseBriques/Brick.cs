@@ -222,9 +222,6 @@ namespace CasseBriques
 
     public abstract class Brick : Entity,ICollider
     {
-        //public Texture2D[] sBrick;
-        //public Texture2D sBrick;
-
         public Rectangle rBrick;
 
         public int life;
@@ -232,17 +229,27 @@ namespace CasseBriques
 
         public Vector2 gridPosition;
 
+        public bool isFalling;
+
 
         public Brick(Texture2D pSprite):base(pSprite)
         {
-            //sBrick = pSprite;
-            origin = new Vector2(0, 0);
+            isFalling = false;
         }
 
 
         public void Update()
         {
-            //sprite = life;
+            if (isFalling)
+            {
+                pos.Y += 9;
+                rBrick.Y = (int)bounds.Y + 300;
+            }
+            if(pos.Y > bounds.Y + 100)
+            {
+                IManager srvBricks = ServicesLocator.GetService<IManager>(); // Détruit la brique
+                srvBricks.DeleteObject(this);
+            }
         }
 
         public override void Draw() // Affichage géré par le Brick Manager
@@ -273,8 +280,12 @@ namespace CasseBriques
             }
             else
             {
-                IManager srvBricks = ServicesLocator.GetService<IManager>(); // Détruit la brique
-                srvBricks.DeleteObject(this);
+                IMain srvMain = ServicesLocator.GetService<IMain>();
+                if(srvMain != null)
+                {
+                    srvMain.Shake(new Vector2(100, 100));
+                }
+                isFalling = true;
             }
 
             return true;

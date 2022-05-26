@@ -12,10 +12,9 @@ public interface IMain
     Vector2 GetBounds();
     Texture2D LoadT2D(string pTex);
     SpriteBatch GetSpriteBatch();
-
     int GetCurrentLevel();
-
     void SetCurrentLevel(int pLevel);
+    void Shake(Vector2 poffset);
 }
 
 public interface ICollider

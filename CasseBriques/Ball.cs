@@ -88,7 +88,7 @@ namespace CasseBriques
                 {
                     if (pCollider is Brick)
                     {
-                        pCollider.ManageLife();
+                        pCollider.ManageLife(); // Gère la vie et la mort de la brique
                         if (pos.X <= pCollider.GetPosition().X)
                         {
                             spd.X *= -1;
@@ -174,14 +174,5 @@ namespace CasseBriques
             }
             
         }
-
-        /*public void Draw()
-        {
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
-            {
-                srvMain.GetSpriteBatch().Draw(sprite, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
-            }
-        }*/
     }
 }

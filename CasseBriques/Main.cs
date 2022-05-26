@@ -23,8 +23,14 @@ namespace CasseBriques
 
         public int _currentLevel;
 
-        // Couleurs
+        // Ecran
         public Color colorXbox;
+        private bool shakeViewport;
+        private double shakeStartAngle;
+        private double shakeRadius;
+        private Random rand;
+        private float shakeDuration;
+        private float shakeTimer;
 
         public Main()
         {
@@ -46,6 +52,9 @@ namespace CasseBriques
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
+
+            rand = new Random();
+            shakeDuration = 2;
 
             _JsonManager = new JsonManager();
 
@@ -90,8 +99,6 @@ namespace CasseBriques
             _ball.UpdateColl(_hole);
             _ball.UpdateColl(_paddle);
 
-            
-
             try
             {
                 for (int i = _briqueManager._bricksList.Count-1; i >= 0; i--)
@@ -105,8 +112,6 @@ namespace CasseBriques
                 Debug.WriteLine("Index :", e.Message);
             }
 
-            
-
             for (int i = _briqueManager._spooler.Count - 1;i>=0;i--) // Suppression des briques à supprimer de la liste (cpt Obvious)
             {
                 _briqueManager._bricksList.Remove(_briqueManager._spooler[i]);
@@ -115,6 +120,8 @@ namespace CasseBriques
 
             _ball.Update();
 
+            _briqueManager.Update();
+
 
             base.Update(gameTime);
         }
@@ -122,7 +129,25 @@ namespace CasseBriques
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            _spriteBatch.Begin();
+
+
+            // Screen shake
+            Vector2 offset = new Vector2(0, 0);
+            if (shakeViewport)
+            {
+                offset = new Vector2((float)(Math.Sin(shakeStartAngle) * shakeRadius), (float)(Math.Cos(shakeStartAngle) * shakeRadius));
+                shakeRadius -= 0.25f;
+                shakeStartAngle += (150 + rand.Next(60));
+                shakeTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if(shakeTimer >= shakeDuration)
+                {
+                    shakeViewport = false;
+                    shakeTimer = shakeDuration;
+                }
+            }
+
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(offset.X, offset.Y, 0));
 
             _landscape.Draw();
             _hole.Draw();
@@ -161,6 +186,11 @@ namespace CasseBriques
         public void SetCurrentLevel(int pLevel)
         {
             _currentLevel = pLevel;
+        }
+
+        public void Shake(Vector2 poffset)
+        {
+            shakeViewport = true;
         }
     }
 }
