@@ -153,6 +153,8 @@ namespace CasseBriques
                             pos.Y = srvPaddle.GetPosition().Y - (sprite.Height / 2);
                             rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
                             rBall.Y = (int)pos.Y - (int)origin.Y;
+                            spd.X = 6;
+                            spd.Y = 6;
                         }
 
 

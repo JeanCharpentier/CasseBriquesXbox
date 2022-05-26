@@ -273,6 +273,8 @@ namespace CasseBriques
 
         public virtual bool ManageLife()
         {
+            IMain srvMain = ServicesLocator.GetService<IMain>();
+            IManager srvManager = ServicesLocator.GetService<IManager>();
             if (life > 0)
             {
                 life--;
@@ -280,14 +282,26 @@ namespace CasseBriques
             }
             else
             {
-                IMain srvMain = ServicesLocator.GetService<IMain>();
-                if(srvMain != null)
+                if(this is Red)
                 {
-                    srvMain.Shake(new Vector2(100, 100));
+                    if (srvMain != null)
+                    {
+                        srvMain.Shake(new Vector2(100, 100));
+                    }
+                    if(srvManager != null)
+                    {
+                        srvManager.DeleteObject(this);
+                    }
                 }
-                isFalling = true;
+                else
+                {
+                    if (srvMain != null)
+                    {
+                        srvMain.Shake(new Vector2(100, 100));
+                    }
+                    isFalling = true;
+                }
             }
-
             return true;
         }
     }
