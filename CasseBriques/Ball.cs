@@ -23,9 +23,6 @@ namespace CasseBriques
 
         private bool isMoving;
 
-        // Read Only : public int x { get; private set; }
-
-
         public Rectangle rBall;
 
         public Ball(Texture2D pTexture):base(pTexture)
@@ -43,13 +40,7 @@ namespace CasseBriques
             speed = 6;
         }
         public void Load()
-        {
-            /*IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
-            {
-                sBall = srvMain.LoadT2D("ball_blue_small");
-            }*/
-            
+        {            
             origin = new Vector2(sprite.Width/2, sprite.Height/2);
 
             rBall = new Rectangle((int)pos.X, (int)pos.Y, sprite.Width, sprite.Height);
@@ -91,76 +82,106 @@ namespace CasseBriques
 
         public void UpdateColl(ICollider pCollider) // Test des collisions
         {
-            if (CF.IsColliding(rBall, pCollider.GetCollRect()))
+            if(isMoving)
             {
-                if (pCollider is Brick)
+                if (CF.IsColliding(rBall, pCollider.GetCollRect()))
                 {
-                    pCollider.ManageLife();
-                    if (pos.X <= pCollider.GetPosition().X)
+                    if (pCollider is Brick)
                     {
-                        spd.X *= -1;
-                        pos.X -= sprite.Width / 4;                        
-                    }else if(pos.X >= pCollider.GetPosition().X + pCollider.GetCollRect().Width)
-                    {
-                        spd.X *= -1;
-                        pos.X += sprite.Width / 4;
+                        pCollider.ManageLife();
+                        if (pos.X <= pCollider.GetPosition().X)
+                        {
+                            spd.X *= -1;
+                            pos.X -= sprite.Width / 4;
+                        }
+                        else if (pos.X >= pCollider.GetPosition().X + pCollider.GetCollRect().Width)
+                        {
+                            spd.X *= -1;
+                            pos.X += sprite.Width / 4;
+                        }
+                        else if (pos.Y <= pCollider.GetPosition().Y)
+                        {
+                            spd.Y *= -1;
+                            pos.Y -= sprite.Height / 4;
+                        }
+                        else if (pos.Y >= pCollider.GetPosition().Y + pCollider.GetCollRect().Height)
+                        {
+                            spd.Y *= -1;
+                            pos.Y += sprite.Height / 4;
+                        }
                     }
-                    else if (pos.Y <= pCollider.GetPosition().Y)
+
+                    if (pCollider is Paddle)
                     {
+                        Vector2 paddleLoc = pCollider.GetPosition();
+                        Rectangle paddleRect = pCollider.GetCollRect();
+
+                        float ballDist = CF.Dist2(pos, paddleLoc);
+                        int deg = 10;
+
+                        if (spd.X > 0) // Vient de la gauche
+                        {
+                            deg = 10;
+                        }
+                        else // Vient de la droite
+                        {
+                            deg = -10;
+                        }
+
                         spd.Y *= -1;
-                        pos.Y -= sprite.Height / 4;
-                    }
-                    else if (pos.Y >= pCollider.GetPosition().Y + pCollider.GetCollRect().Height)
-                    {
-                        spd.Y *= -1;
-                        pos.Y += sprite.Height / 4;
-                    }
-                }
+                        spd.X = deg * (ballDist / 100);
 
-                if(pCollider is Paddle)
-                {
-                    Vector2 paddleLoc = pCollider.GetPosition();
-                    Rectangle paddleRect = pCollider.GetCollRect();
-
-                    float ballDist = CF.Dist2(pos, paddleLoc);
-                    int deg = 10;
-
-                    if(spd.X > 0) // Vient de la gauche
-                    {
-                        deg = 10;
-                    }else // Vient de la droite
-                    {
-                        deg = -10;
+                        if (pos.X >= paddleLoc.X + (paddleRect.Width / 2))
+                        {
+                            pos.X += sprite.Width / 2;
+                            spd.X *= -1;
+                        }
+                        else if (pos.X <= paddleLoc.X - (paddleRect.Width / 2))
+                        {
+                            pos.X -= sprite.Width / 2;
+                            spd.X *= -1;
+                        }
                     }
 
-                    spd.Y *= -1;
-                    spd.X = deg * (ballDist / 100);
+                    if (pCollider is Hole)
+                    {
+                        isMoving = false;
+                        ICollider srvPaddle = ServicesLocator.GetService<ICollider>();
+                        if (srvPaddle != null && srvPaddle is Paddle)
+                        {
+                            pos.X = srvPaddle.GetPosition().X;
+                            pos.Y = srvPaddle.GetPosition().Y - (sprite.Height / 2);
+                            rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
+                            rBall.Y = (int)pos.Y - (int)origin.Y;
+                        }
 
-                    if (pos.X >= paddleLoc.X + (paddleRect.Width/2))
-                    {
-                        pos.X += sprite.Width / 2;
-                        spd.X *= -1;
-                    }else if(pos.X <= paddleLoc.X - (paddleRect.Width / 2))
-                    {
-                        pos.X -= sprite.Width / 2;
-                        spd.X *= -1;
+
+                        Debug.WriteLine("Fin de NIVEAU !! GG !");
+                        IMain srvMain = ServicesLocator.GetService<IMain>();
+                        if (srvMain != null)
+                        {
+                            int level;
+                            level = srvMain.GetCurrentLevel();
+                            srvMain.SetCurrentLevel(level+1);
+                            IManager srvManager = ServicesLocator.GetService<IManager>();
+                            if (srvManager != null && srvManager is BricksManager)
+                            {
+                                srvManager.LoadFromJson(level.ToString());
+                            }
+                        }
                     }
-                }
-
-                if(pCollider is Hole)
-                {
-                    Debug.WriteLine("Fin de NIVEAU !! GG !");
                 }
             }
+            
         }
 
-        public void Draw()
+        /*public void Draw()
         {
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
                 srvMain.GetSpriteBatch().Draw(sprite, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
             }
-        }
+        }*/
     }
 }

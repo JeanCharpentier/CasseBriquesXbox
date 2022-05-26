@@ -27,37 +27,20 @@ namespace CasseBriques
             ServicesLocator.AddService<IManager>(this);
         }
 
-        public void Load()
+        public void LoadFromJson(string pJsonFile)
         {
-            _spritelist = new Texture2D[8];
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
-            {
-                _spritelist[0] = srvMain.LoadT2D("button_violet");
-                _spritelist[1] = srvMain.LoadT2D("button_indigo"); 
-                _spritelist[2] = srvMain.LoadT2D("button_blue"); 
-                _spritelist[3] = srvMain.LoadT2D("button_green"); 
-                _spritelist[4] = srvMain.LoadT2D("button_yellow"); 
-                _spritelist[5] = srvMain.LoadT2D("button_orange"); 
-                _spritelist[6] = srvMain.LoadT2D("button_red");
-                _spritelist[7] = srvMain.LoadT2D("button_grey");
-            }
-            else
-            {
-                Trace.WriteLine("!!! Echec de chargement de l'image de brique");
-            }
-
+            _bricksList.Clear();
             IJson srvJson = ServicesLocator.GetService<IJson>();
-            string[] lignes = srvJson.ReadJson("Levels/level1.json").map.Split('/');
+            string[] lignes = srvJson.ReadJson("Levels/level"+pJsonFile+".json").map.Split('/');
             int lines = 0;
-            foreach(var line in lignes)
+            foreach (var line in lignes)
             {
                 int cols = 0;
                 string[] columns = line.Split(',');
-                foreach(string id in columns)
+                foreach (string id in columns)
                 {
                     Brick b;
-                    switch(id)
+                    switch (id)
                     {
                         case "0":
                             b = null;
@@ -98,10 +81,31 @@ namespace CasseBriques
                         _bricksList.Add(b);
                     }
                     cols++;
-                    
+
                 }
                 lines++;
             }
+        }
+        public void Load()
+        {
+            _spritelist = new Texture2D[8];
+            IMain srvMain = ServicesLocator.GetService<IMain>();
+            if (srvMain != null)
+            {
+                _spritelist[0] = srvMain.LoadT2D("button_violet");
+                _spritelist[1] = srvMain.LoadT2D("button_indigo"); 
+                _spritelist[2] = srvMain.LoadT2D("button_blue"); 
+                _spritelist[3] = srvMain.LoadT2D("button_green"); 
+                _spritelist[4] = srvMain.LoadT2D("button_yellow"); 
+                _spritelist[5] = srvMain.LoadT2D("button_orange"); 
+                _spritelist[6] = srvMain.LoadT2D("button_red");
+                _spritelist[7] = srvMain.LoadT2D("button_grey");
+            }
+            else
+            {
+                Trace.WriteLine("!!! Echec de chargement de l'image de brique");
+            }
+            LoadFromJson("1");
         }
 
         public void Update()
@@ -239,6 +243,11 @@ namespace CasseBriques
         public void Update()
         {
             //sprite = life;
+        }
+
+        public override void Draw() // Affichage géré par le Brick Manager
+        {
+
         }
         public void SetCollRect()
         {

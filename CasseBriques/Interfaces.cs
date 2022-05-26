@@ -12,6 +12,10 @@ public interface IMain
     Vector2 GetBounds();
     Texture2D LoadT2D(string pTex);
     SpriteBatch GetSpriteBatch();
+
+    int GetCurrentLevel();
+
+    void SetCurrentLevel(int pLevel);
 }
 
 public interface ICollider
@@ -27,6 +31,7 @@ public interface ICollider
 public interface IManager
 {
     bool DeleteObject(ICollider pCollider);
+    void LoadFromJson(string pJsonFile);
 }
 
 public interface IJson

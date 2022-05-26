@@ -26,8 +26,15 @@ namespace CasseBriques
             {
                 bounds = new Vector2(1280, 720);
             }
-
             sprite = pSprite;
         }
-    }
+        public virtual void Draw()
+        {
+            IMain srvMain = ServicesLocator.GetService<IMain>();
+            if (srvMain != null)
+            {
+                srvMain.GetSpriteBatch().Draw(sprite, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
+            }
+        }
+    } 
 }

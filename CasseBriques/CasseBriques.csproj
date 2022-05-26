@@ -101,6 +101,7 @@
     <Compile Include="Interfaces.cs" />
     <Compile Include="JsonManager.cs" />
     <Compile Include="Landscape.cs" />
+    <Compile Include="LevelManager.cs" />
     <Compile Include="Paddle.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GamePage.xaml.cs">

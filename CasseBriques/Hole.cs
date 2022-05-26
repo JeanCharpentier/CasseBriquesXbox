@@ -24,14 +24,6 @@ namespace CasseBriques
             rHole = new Rectangle((int)pos.X - (int)origin.X, (int)pos.Y - (int)origin.Y, (int)sprite.Width, (int)sprite.Height);
         }
 
-        public void Draw()
-        {
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
-            {
-                srvMain.GetSpriteBatch().Draw(sprite, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
-            }
-        }
         public Rectangle GetCollRect()
         {
             return rHole;

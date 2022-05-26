@@ -21,6 +21,8 @@ namespace CasseBriques
         public Landscape _landscape;
         public Hole _hole;
 
+        public int _currentLevel;
+
         // Couleurs
         public Color colorXbox;
 
@@ -46,6 +48,8 @@ namespace CasseBriques
             _graphics.ApplyChanges();
 
             _JsonManager = new JsonManager();
+
+            _currentLevel = 1;
 
             _paddle = Paddle.GetInstance();
             _paddle.Init();
@@ -83,9 +87,10 @@ namespace CasseBriques
             _paddle.Update();
 
             // Collisions
+            _ball.UpdateColl(_hole);
             _ball.UpdateColl(_paddle);
 
-            _ball.UpdateColl(_hole);
+            
 
             try
             {
@@ -99,7 +104,9 @@ namespace CasseBriques
             {
                 Debug.WriteLine("Index :", e.Message);
             }
+
             
+
             for (int i = _briqueManager._spooler.Count - 1;i>=0;i--) // Suppression des briques à supprimer de la liste (cpt Obvious)
             {
                 _briqueManager._bricksList.Remove(_briqueManager._spooler[i]);
@@ -144,6 +151,16 @@ namespace CasseBriques
         public SpriteBatch GetSpriteBatch()
         {
             return _spriteBatch;
+        }
+
+        public int GetCurrentLevel()
+        {
+            return _currentLevel;
+        }
+
+        public void SetCurrentLevel(int pLevel)
+        {
+            _currentLevel = pLevel;
         }
     }
 }

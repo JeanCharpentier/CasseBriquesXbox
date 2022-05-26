@@ -96,21 +96,10 @@ namespace CasseBriques
             this.rPaddle.X = (int)this.pos.X - (int)origin.X; // Mouvements Rectangle de collision
             this.rPaddle.Y = (int)this.pos.Y;
         }
-
-        public void Draw()
-        {
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
-            {
-                srvMain.GetSpriteBatch().Draw(sprite, pos, null, Color.White, 0, origin, 1.0f, SpriteEffects.None, 0);
-            }
-        }
-
         public Vector2 GetPosition()
         {
             return pos;
         }
-
         public Rectangle GetCollRect()
         {
             return rPaddle;
