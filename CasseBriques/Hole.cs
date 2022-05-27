@@ -19,7 +19,7 @@ namespace CasseBriques
 
         public void Init()
         {
-            pos = new Vector2(bounds.X / 2, bounds.Y / 2);
+            pos = new Vector2(bounds.X / 2, 200-(sprite.Height/4));
             origin = new Vector2(sprite.Width / 2, sprite.Height / 2);
             rHole = new Rectangle((int)pos.X - (int)origin.X, (int)pos.Y - (int)origin.Y, (int)sprite.Width, (int)sprite.Height);
         }

@@ -15,8 +15,6 @@ namespace CasseBriques
     {
         private static Paddle paddleInstance;
 
-
-        //public Texture2D sPaddle;
         public Rectangle rPaddle; // Rectangle de collision
 
         public Vector2 spd;
@@ -24,7 +22,6 @@ namespace CasseBriques
 
         const int maxVel = 15;
         const float factVel = 1.5f;
-
 
         private Paddle(Texture2D pTexture):base(pTexture)
         {

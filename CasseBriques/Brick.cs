@@ -286,7 +286,7 @@ namespace CasseBriques
                 {
                     if (srvMain != null)
                     {
-                        srvMain.Shake(new Vector2(100, 100));
+                        srvMain.Shake(8.0f);
                     }
                     if(srvManager != null)
                     {
@@ -297,7 +297,7 @@ namespace CasseBriques
                 {
                     if (srvMain != null)
                     {
-                        srvMain.Shake(new Vector2(100, 100));
+                        srvMain.Shake(1.0f);
                     }
                     isFalling = true;
                 }

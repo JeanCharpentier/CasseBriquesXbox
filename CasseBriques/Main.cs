@@ -13,6 +13,7 @@ namespace CasseBriques
         private SpriteBatch _spriteBatch;
 
         public JsonManager _JsonManager;
+        public LevelManager _lvlManager;
 
         public Paddle _paddle;
         public Ball _ball;
@@ -20,8 +21,6 @@ namespace CasseBriques
 
         public Landscape _landscape;
         public Hole _hole;
-
-        public int _currentLevel;
 
         // Ecran
         public Color colorXbox;
@@ -49,16 +48,16 @@ namespace CasseBriques
         {
             // Taille de l'écran fixe
             _graphics.IsFullScreen = false; // A REVOIR POUR LA XBOX, Tester en 1080p ?
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
             _graphics.ApplyChanges();
 
             rand = new Random();
             shakeDuration = 2;
+            shakeTimer = shakeDuration;
 
             _JsonManager = new JsonManager();
-
-            _currentLevel = 1;
+            _lvlManager = new LevelManager();
 
             _paddle = Paddle.GetInstance();
             _paddle.Init();
@@ -95,7 +94,7 @@ namespace CasseBriques
 
             _paddle.Update();
 
-            // Collisions
+            // Update Collisions
             _ball.UpdateColl(_hole);
             _ball.UpdateColl(_paddle);
 
@@ -136,7 +135,7 @@ namespace CasseBriques
             if (shakeViewport)
             {
                 offset = new Vector2((float)(Math.Sin(shakeStartAngle) * shakeRadius), (float)(Math.Cos(shakeStartAngle) * shakeRadius));
-                shakeRadius -= 0.25f;
+                shakeRadius -= 1.0f;
                 shakeStartAngle += (150 + rand.Next(60));
                 shakeTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -177,19 +176,9 @@ namespace CasseBriques
         {
             return _spriteBatch;
         }
-
-        public int GetCurrentLevel()
+        public void Shake(float pRadius)
         {
-            return _currentLevel;
-        }
-
-        public void SetCurrentLevel(int pLevel)
-        {
-            _currentLevel = pLevel;
-        }
-
-        public void Shake(Vector2 poffset)
-        {
+            shakeRadius = pRadius; 
             shakeViewport = true;
         }
     }

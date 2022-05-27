@@ -145,6 +145,8 @@ namespace CasseBriques
 
                     if (pCollider is Hole)
                     {
+                        Debug.WriteLine("Fin de NIVEAU !! GG !");
+
                         isMoving = false;
                         ICollider srvPaddle = ServicesLocator.GetService<ICollider>();
                         if (srvPaddle != null && srvPaddle is Paddle)
@@ -157,19 +159,10 @@ namespace CasseBriques
                             spd.Y = 6;
                         }
 
-
-                        Debug.WriteLine("Fin de NIVEAU !! GG !");
-                        IMain srvMain = ServicesLocator.GetService<IMain>();
-                        if (srvMain != null)
+                        ILevel srvLevel = ServicesLocator.GetService<ILevel>();
+                        if (srvLevel != null)
                         {
-                            int level;
-                            level = srvMain.GetCurrentLevel();
-                            srvMain.SetCurrentLevel(level+1);
-                            IManager srvManager = ServicesLocator.GetService<IManager>();
-                            if (srvManager != null && srvManager is BricksManager)
-                            {
-                                srvManager.LoadFromJson(level.ToString());
-                            }
+                            srvLevel.SetCurrentLevel(0);
                         }
                     }
                 }

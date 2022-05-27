@@ -12,9 +12,7 @@ public interface IMain
     Vector2 GetBounds();
     Texture2D LoadT2D(string pTex);
     SpriteBatch GetSpriteBatch();
-    int GetCurrentLevel();
-    void SetCurrentLevel(int pLevel);
-    void Shake(Vector2 poffset);
+    void Shake(float pRadius);
 }
 
 public interface ICollider
@@ -36,5 +34,10 @@ public interface IManager
 public interface IJson
 {
     JsonManager ReadJson(string pFile);
+}
 
+public interface ILevel
+{
+    int GetCurrentLevel();
+    void SetCurrentLevel(int pLevel);
 }
