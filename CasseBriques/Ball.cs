@@ -13,13 +13,9 @@ namespace CasseBriques
 {
     public class Ball:Entity
     {
-        //private Texture2D sBall;
-
         public Vector2 oldPos;
         private Vector2 spd;
-        private int speed;
-        public Vector2 vel;
-        private float angle;
+        private Vector2 base_spd;
 
         private bool isMoving;
 
@@ -28,24 +24,11 @@ namespace CasseBriques
         public Ball(Texture2D pTexture):base(pTexture)
         {
             isMoving = false;
-        }
-
-        public void Init()
-        {
-            pos = new Vector2((bounds.X / 2)-20, bounds.Y - 200);
-            spd = new Vector2(6, 6);
-            
-            vel = new Vector2(0, 0);
-            angle = MathF.PI*(7.0f/4.0f);
-            speed = 6;
-        }
-        public void Load()
-        {            
-            origin = new Vector2(sprite.Width/2, sprite.Height/2);
-
+            base_spd = new Vector2(2, -6);
+            pos = new Vector2((bounds.X / 2) - 20, bounds.Y - 200);
+            spd = base_spd;
             rBall = new Rectangle((int)pos.X, (int)pos.Y, sprite.Width, sprite.Height);
         }
-
         public void Update()
         {
             if (isMoving)
@@ -54,19 +37,17 @@ namespace CasseBriques
                 {
                     spd.X *= -1;
                 }
-                if (pos.Y >= bounds.Y - sprite.Height || pos.Y <= 0)
+                if (pos.Y >= bounds.Y - sprite.Height || pos.Y <= 20)
                 {
                     spd.Y *= -1;
                 }
-
-                Vector2 v = new Vector2(speed * MathF.Cos(angle), speed * MathF.Sin(angle));
                 pos += spd;
 
                 rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
                 rBall.Y = (int)pos.Y - (int)origin.Y;
 
-                oldPos = pos; // Garde l'ancienne position pour affiner les rebonds
-            }else if(!isMoving && (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.A)))
+                //oldPos = pos; // Garde l'ancienne position pour affiner les rebonds
+            }else if(!isMoving && (GamePad.GetState(PlayerIndex.One).Buttons.B == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space)))
             {
                 isMoving = true;
             }else if (!isMoving)
@@ -75,7 +56,7 @@ namespace CasseBriques
                 if(srvPaddle != null && srvPaddle is Paddle)
                 {
                     pos.X = srvPaddle.GetPosition().X;
-                    pos.Y = srvPaddle.GetPosition().Y - (sprite.Height/2);
+                    pos.Y = srvPaddle.GetPosition().Y - (sprite.Height);
                 }
             }
         }
@@ -88,27 +69,30 @@ namespace CasseBriques
                 {
                     if (pCollider is Brick)
                     {
+                        Vector2 brickPos = pCollider.GetPosition();
+                        Rectangle brickRect = pCollider.GetCollRect();
+
+                        if(CF.CollideLeft(rBall, brickRect, spd))
+                        {
+                            Debug.WriteLine("Touche gauche");
+                            spd.X *= -1;
+                        }
+                        if (CF.CollideRight(rBall, brickRect, spd))
+                        {
+                            Debug.WriteLine("Touche droite");
+                            spd.X *= -1;
+                        }
+                        if (CF.CollideTop(rBall, brickRect, spd))
+                        {
+                            Debug.WriteLine("Touche haut");
+                            spd.Y *= -1;
+                        }
+                        if (CF.CollideBottom(rBall, brickRect, spd))
+                        {
+                            Debug.WriteLine("Touche bas");
+                            spd.Y *= -1;
+                        }
                         pCollider.ManageLife(); // Gère la vie et la mort de la brique
-                        if (pos.X <= pCollider.GetPosition().X)
-                        {
-                            spd.X *= -1;
-                            pos.X -= sprite.Width / 4;
-                        }
-                        else if (pos.X >= pCollider.GetPosition().X + pCollider.GetCollRect().Width)
-                        {
-                            spd.X *= -1;
-                            pos.X += sprite.Width / 4;
-                        }
-                        else if (pos.Y <= pCollider.GetPosition().Y)
-                        {
-                            spd.Y *= -1;
-                            pos.Y -= sprite.Height / 4;
-                        }
-                        else if (pos.Y >= pCollider.GetPosition().Y + pCollider.GetCollRect().Height)
-                        {
-                            spd.Y *= -1;
-                            pos.Y += sprite.Height / 4;
-                        }
                     }
 
                     if (pCollider is Paddle)
@@ -119,50 +103,50 @@ namespace CasseBriques
                         float ballDist = CF.Dist2(pos, paddleLoc);
                         int deg = 10;
 
-                        if (spd.X > 0) // Vient de la gauche
+                        if (CF.CollideTop(rBall, paddleRect, spd))
                         {
-                            deg = 10;
-                        }
-                        else // Vient de la droite
-                        {
-                            deg = -10;
-                        }
+                            if (spd.X > 0) // Vient de la gauche
+                            {
+                                deg = 10;
+                            }
+                            else // Vient de la droite
+                            {
+                                deg = -10;
+                            }
 
-                        spd.Y *= -1;
-                        spd.X = deg * (ballDist / 100);
-
-                        if (pos.X >= paddleLoc.X + (paddleRect.Width / 2))
-                        {
-                            pos.X += sprite.Width / 2;
-                            spd.X *= -1;
+                            spd.Y *= -1;
+                            spd.X = deg * (ballDist / 100);
                         }
-                        else if (pos.X <= paddleLoc.X - (paddleRect.Width / 2))
+                        if(CF.CollideLeft(rBall, paddleRect, spd) || CF.CollideRight(rBall, paddleRect,spd))
                         {
-                            pos.X -= sprite.Width / 2;
-                            spd.X *= -1;
+                            spd *= -1;
                         }
                     }
 
                     if (pCollider is Hole)
                     {
-                        Debug.WriteLine("Fin de NIVEAU !! GG !");
-
-                        isMoving = false;
-                        ICollider srvPaddle = ServicesLocator.GetService<ICollider>();
-                        if (srvPaddle != null && srvPaddle is Paddle)
+                        IHole srvHole = ServicesLocator.GetService<IHole>();
+                        if(srvHole.GetState())
                         {
-                            pos.X = srvPaddle.GetPosition().X;
-                            pos.Y = srvPaddle.GetPosition().Y - (sprite.Height / 2);
-                            rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
-                            rBall.Y = (int)pos.Y - (int)origin.Y;
-                            spd.X = 6;
-                            spd.Y = 6;
-                        }
+                            isMoving = false;
+                            spd = base_spd;
+                            ICollider srvPaddle = ServicesLocator.GetService<ICollider>();
+                            if (srvPaddle != null && srvPaddle is Paddle)
+                            {
+                                pos.X = srvPaddle.GetPosition().X;
+                                pos.Y = srvPaddle.GetPosition().Y - (sprite.Height / 2);
+                                rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
+                                rBall.Y = (int)pos.Y - (int)origin.Y;
+                                spd.X = 6;
+                                spd.Y = 6;
+                            }
 
-                        ILevel srvLevel = ServicesLocator.GetService<ILevel>();
-                        if (srvLevel != null)
-                        {
-                            srvLevel.SetCurrentLevel(0);
+                            ILevel srvLevel = ServicesLocator.GetService<ILevel>();
+                            if (srvLevel != null)
+                            {
+                                srvLevel.SetCurrentLevel(0);
+                            }
+                            srvHole.SetState(false);
                         }
                     }
                 }

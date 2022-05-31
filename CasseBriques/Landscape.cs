@@ -19,6 +19,7 @@ namespace CasseBriques
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
+                bounds = srvMain.GetBounds();
                 sBG[0] = srvMain.LoadT2D("background_green"); // Chargée à chaque nouvelle brique !!! A REVOIR !
                 sBG[1] = srvMain.LoadT2D("background_blue"); // Chargée à chaque nouvelle brique !!! A REVOIR !
                 sBG[2] = srvMain.LoadT2D("background_grey"); // Chargée à chaque nouvelle brique !!! A REVOIR !
@@ -29,15 +30,6 @@ namespace CasseBriques
                 Trace.WriteLine("!!! Echec de chargement de l'image de brique");
             }
         }
-        public void Init()
-        {
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
-            {
-                bounds = srvMain.GetBounds();
-            }
-        }
-
         public void Draw()
         {
             IMain srvMain = ServicesLocator.GetService<IMain>();

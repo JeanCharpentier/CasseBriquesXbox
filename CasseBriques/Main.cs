@@ -18,9 +18,11 @@ namespace CasseBriques
         public Paddle _paddle;
         public Ball _ball;
         public BricksManager _briqueManager;
-
         public Landscape _landscape;
         public Hole _hole;
+
+        public bool _gameplay; // Gameplay ou dans le menu ?
+        public MenuScene _menu;
 
         // Ecran
         public Color colorXbox;
@@ -35,13 +37,13 @@ namespace CasseBriques
         {
 
             _graphics = new GraphicsDeviceManager(this);
+            ServicesLocator.AddService<IMain>(this);
 
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = true; // test false sur la Xbox ?
 
             colorXbox = new Color(16, 124, 16);
-
-            ServicesLocator.AddService<IMain>(this);
+            _gameplay = true;
         }
 
         protected override void Initialize()
@@ -59,19 +61,17 @@ namespace CasseBriques
             _JsonManager = new JsonManager();
             _lvlManager = new LevelManager();
 
+            _menu = new MenuScene();
+
             _paddle = Paddle.GetInstance();
-            _paddle.Init();
 
             _ball = new Ball(LoadT2D("ball_blue_small")); // A REVOIR !!!
-            _ball.Init();
 
             _briqueManager = new BricksManager();
 
             _landscape = new Landscape();
-            _landscape.Init();
 
             _hole = new Hole(LoadT2D("hole_large_end_alt")); // A REVOIR !!!
-            _hole.Init();
 
             base.Initialize();
         }
@@ -79,8 +79,6 @@ namespace CasseBriques
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _paddle.Load();
-            _ball.Load();
             _briqueManager.Load();
         }
 
@@ -88,39 +86,36 @@ namespace CasseBriques
         {
             // QUITTER LE JEU
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-
-
-            _paddle.Update();
-
-            // Update Collisions
-            _ball.UpdateColl(_hole);
-            _ball.UpdateColl(_paddle);
-
-            try
             {
-                for (int i = _briqueManager._bricksList.Count-1; i >= 0; i--)
-                {                           
+                QuitGame();
+            }
+
+            if(_gameplay)
+            {
+                // Update Collisions
+                _paddle.Update();
+                _ball.UpdateColl(_paddle);
+                _ball.UpdateColl(_hole);
+
+                for (int i = _briqueManager._bricksList.Count - 1; i >= 0; i--)
+                {
                     _ball.UpdateColl(_briqueManager._bricksList[i]);
                 }
-            }
 
-            catch (ArgumentException e)
+                for (int i = _briqueManager._spooler.Count - 1; i >= 0; i--) // Suppression des briques à supprimer de la liste (cpt Obvious)
+                {
+                    _briqueManager._bricksList.Remove(_briqueManager._spooler[i]);
+                }
+                _briqueManager._spooler.Clear();
+
+                _briqueManager.Update();
+
+                _ball.Update();
+            }
+            else
             {
-                Debug.WriteLine("Index :", e.Message);
+                _menu.Update();
             }
-
-            for (int i = _briqueManager._spooler.Count - 1;i>=0;i--) // Suppression des briques à supprimer de la liste (cpt Obvious)
-            {
-                _briqueManager._bricksList.Remove(_briqueManager._spooler[i]);
-            }
-            _briqueManager._spooler.Clear();
-
-            _ball.Update();
-
-            _briqueManager.Update();
-
 
             base.Update(gameTime);
         }
@@ -128,8 +123,6 @@ namespace CasseBriques
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-
             // Screen shake
             Vector2 offset = new Vector2(0, 0);
             if (shakeViewport)
@@ -149,13 +142,18 @@ namespace CasseBriques
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(offset.X, offset.Y, 0));
 
             _landscape.Draw();
-            _hole.Draw();
 
-            _paddle.Draw();
-            _ball.Draw();
-            _briqueManager.Draw();
+            if (_gameplay)
+            {
+                _paddle.Draw();
+                _ball.Draw();
+                _hole.Draw();
+                _briqueManager.Draw();
+            }else
+            {
+                _menu.Draw();
+            }
 
-            
             _spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -180,6 +178,16 @@ namespace CasseBriques
         {
             shakeRadius = pRadius; 
             shakeViewport = true;
+        }
+
+        public void QuitGame()
+        {
+            Exit();
+        }
+
+        public void LaunchGame()
+        {
+            _gameplay = true;
         }
     }
 }

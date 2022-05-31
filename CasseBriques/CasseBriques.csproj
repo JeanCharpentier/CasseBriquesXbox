@@ -98,10 +98,12 @@
     <Compile Include="CF.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Hole.cs" />
+    <Compile Include="InputManager.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="JsonManager.cs" />
     <Compile Include="Landscape.cs" />
     <Compile Include="LevelManager.cs" />
+    <Compile Include="MenuScene.cs" />
     <Compile Include="Paddle.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GamePage.xaml.cs">

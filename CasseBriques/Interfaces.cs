@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CasseBriques;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 public interface IMain
 {
@@ -13,16 +14,22 @@ public interface IMain
     Texture2D LoadT2D(string pTex);
     SpriteBatch GetSpriteBatch();
     void Shake(float pRadius);
+
+    void QuitGame();
+
+    void LaunchGame();
 }
 
 public interface ICollider
 {
     Vector2 GetPosition();
     Rectangle GetCollRect();
-
     bool ManageLife();
-
-   // bool DeleteMe();
+}
+public interface IHole
+{
+    bool GetState();
+    void SetState(bool pState);
 }
 
 public interface IManager
@@ -40,4 +47,9 @@ public interface ILevel
 {
     int GetCurrentLevel();
     void SetCurrentLevel(int pLevel);
+}
+
+public interface IInput
+{
+
 }

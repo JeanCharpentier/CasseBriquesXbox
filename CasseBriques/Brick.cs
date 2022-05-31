@@ -112,25 +112,28 @@ namespace CasseBriques
         {
             foreach(Brick b in _bricksList)
             {
+                Debug.WriteLine(_bricksList.Count);
+                if (_bricksList.Count <= 0)
+                {
+                    IHole srvHole = ServicesLocator.GetService<IHole>();
+                    if (srvHole != null)
+                    {
+                        srvHole.SetState(true);
+                    }
+                }
+                b.sprite = _spritelist[b.sprNum];
                 b.Update();
             }
-
-
         }
         public void Draw()
         {
             foreach(Brick b in _bricksList)
             {
-
-                IMain srvMain = ServicesLocator.GetService<IMain>();
-                if (srvMain != null)
+                if (b.sprNum < 0)
                 {
-                    if(b.sprNum < 0)
-                    {
-                        b.sprNum = 0;
-                    }
-                    srvMain.GetSpriteBatch().Draw(_spritelist[b.sprNum], b.pos, null, Color.White, 0, b.origin, 1.0f, SpriteEffects.None, 0);
+                    b.sprNum = 0;
                 }
+                b.Draw();
             }
         }
 
@@ -139,8 +142,8 @@ namespace CasseBriques
             float colPosX = pCollider.GetPosition().X;
             float colPosY = pCollider.GetPosition().Y;
 
-            colPosX = MathF.Floor((colPosX - 64) / 128);
-            colPosY = MathF.Floor((colPosY - 20) / 53);
+            colPosX = MathF.Floor((colPosX-64) / 128);
+            colPosY = MathF.Floor((colPosY-20) / 53);
 
             Vector2 colPos = new Vector2(colPosX, colPosY);
 
@@ -214,6 +217,7 @@ namespace CasseBriques
                     }
                 }
             }
+            
             return true;
         }
     }
@@ -228,6 +232,7 @@ namespace CasseBriques
         public int sprNum;
 
         public Vector2 gridPosition;
+        public Vector2 startPosition;
 
         public bool isFalling;
 
@@ -235,6 +240,7 @@ namespace CasseBriques
         public Brick(Texture2D pSprite):base(pSprite)
         {
             isFalling = false;
+            startPosition = pos;
         }
 
 
@@ -243,22 +249,18 @@ namespace CasseBriques
             if (isFalling)
             {
                 pos.Y += 9;
-                rBrick.Y = (int)bounds.Y + 300;
+                //rBrick.Y = (int)bounds.Y + 300;
             }
             if(pos.Y > bounds.Y + 100)
             {
                 IManager srvBricks = ServicesLocator.GetService<IManager>(); // Détruit la brique
                 srvBricks.DeleteObject(this);
+                Debug.WriteLine("Brique détruite");
             }
-        }
-
-        public override void Draw() // Affichage géré par le Brick Manager
-        {
-
         }
         public void SetCollRect()
         {
-            rBrick = new Rectangle((int)pos.X, (int)pos.Y, sprite.Width, sprite.Height);
+            rBrick = new Rectangle((int)pos.X - (int)origin.X, (int)pos.Y - (int)origin.Y, sprite.Width, sprite.Height); ;
         }
 
         public Rectangle GetCollRect()
@@ -279,6 +281,10 @@ namespace CasseBriques
             {
                 life--;
                 sprNum--;
+                if (srvMain != null)
+                {
+                    srvMain.Shake(2.0f);
+                }
             }
             else
             {
@@ -297,7 +303,7 @@ namespace CasseBriques
                 {
                     if (srvMain != null)
                     {
-                        srvMain.Shake(1.0f);
+                        srvMain.Shake(4.0f);
                     }
                     isFalling = true;
                 }
@@ -312,7 +318,6 @@ namespace CasseBriques
             life = 4;
             sprNum = life;
         }
-
     }
 
     public class Blue : Brick

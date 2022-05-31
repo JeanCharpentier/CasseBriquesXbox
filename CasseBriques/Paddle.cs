@@ -26,28 +26,11 @@ namespace CasseBriques
         private Paddle(Texture2D pTexture):base(pTexture)
         {
             ServicesLocator.AddService<ICollider>(this);
-        }
-
-        public void Init()
-        {
             pos = new Vector2(this.bounds.X / 2, this.bounds.Y - 100);
+            origin = new Vector2(sprite.Width / 2, sprite.Height /2);
             spd = new Vector2(1.5f, 1.5f);
-            vel = new Vector2(0, 0);
+            rPaddle = new Rectangle((int)pos.X - (int)origin.X, (int)pos.Y - (int)origin.Y, sprite.Width, sprite.Height);
         }
-
-        public void Load()
-        { 
-            /*IMain srvMain = ServicesLocator.GetService<IMain>();
-            if(srvMain != null)
-            {
-                sPaddle = srvMain.LoadT2D("block_narrow");
-            }*/
-
-            origin = new Vector2(sprite.Width/2, 0);
-
-            rPaddle = new Rectangle((int)pos.X-(int)origin.X, (int)pos.Y, sprite.Width, sprite.Height);
-        }
-
         public static Paddle GetInstance()
         {
             if(paddleInstance == null)
@@ -60,7 +43,6 @@ namespace CasseBriques
                     paddleInstance = new Paddle(sPaddle);
                 }
             }
-
             return paddleInstance;
         }
 
@@ -68,30 +50,30 @@ namespace CasseBriques
         {
             if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                if (this.vel.X >= -maxVel)
+                if (vel.X >= -maxVel)
                 {
-                    this.vel.X -= factVel;
+                    vel.X -= factVel;
                 }
 
             }else if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                if (this.vel.X <= maxVel)
+                if (vel.X <= maxVel)
                 {
-                    this.vel.X += factVel;
+                    vel.X += factVel;
                 }
             }
             if ((GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Released && GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Released) || (Keyboard.GetState().IsKeyUp(Keys.Right) && Keyboard.GetState().IsKeyUp(Keys.Left)))
             {
-                this.vel.X = CF.Lerp(this.vel.X, 0.0f, 0.07f);
+                vel.X = CF.Lerp(vel.X, 0.0f, 0.07f);
             }
 
-            if (pos.X+vel.X >= 0 && pos.X+vel.X <= this.bounds.X)
+            if (pos.X+vel.X >= 0 && pos.X+vel.X <= bounds.X)
             {
                 pos.X += vel.X;
             }
 
-            this.rPaddle.X = (int)this.pos.X - (int)origin.X; // Mouvements Rectangle de collision
-            this.rPaddle.Y = (int)this.pos.Y;
+            rPaddle.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
+            rPaddle.Y = (int)pos.Y - (int)origin.Y;
         }
         public Vector2 GetPosition()
         {
