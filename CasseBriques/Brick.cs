@@ -246,7 +246,6 @@ namespace CasseBriques
         public Brick(Texture2D pSprite):base(pSprite)
         {
             isFalling = false;
-            
         }
 
 

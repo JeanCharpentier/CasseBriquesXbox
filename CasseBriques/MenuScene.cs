@@ -14,6 +14,7 @@ namespace CasseBriques
     {
         private Button btnPlay;
         private Button btnQuit;
+        private Texture2D header;
 
         private Entity[] _btnList;
         private int _currentBtn;
@@ -25,12 +26,13 @@ namespace CasseBriques
             {
                 btnPlay = new Button(srvMain.LoadT2D("button_play"));
                 btnQuit = new Button(srvMain.LoadT2D("button_quit"));
+                header = srvMain.LoadT2D("Header");
             }
-            btnPlay.pos = new Vector2(btnPlay.bounds.X /4, 400);
+            btnPlay.pos = new Vector2(btnPlay.bounds.X / 2, 400);
             btnPlay.scale = 2.0f;
             _btnList[0] = btnPlay;
 
-            btnQuit.pos = new Vector2(3*(btnQuit.bounds.X / 4), 400);
+            btnQuit.pos = new Vector2((btnQuit.bounds.X / 2), 600);
             btnQuit.scale = 2.0f;
             _btnList[1] = btnQuit;
 
@@ -39,7 +41,7 @@ namespace CasseBriques
         }
         public void Update()
         {
-            if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Left))
+            if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Up))
             {
                 if (_currentBtn > 0)
                 {
@@ -48,7 +50,7 @@ namespace CasseBriques
                     _btnList[_currentBtn].scale = 2.2f;
                 }
             }
-            else if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Right))
+            else if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Down))
             {
                 if (_currentBtn < _btnList.Count() - 1)
                 {
@@ -57,7 +59,7 @@ namespace CasseBriques
                     _btnList[_currentBtn].scale = 2.2f;
                 }
             }
-            if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.A))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 IMain srvMain = ServicesLocator.GetService<IMain>();
                 if (_currentBtn == 0)
@@ -75,6 +77,11 @@ namespace CasseBriques
         {
             btnPlay.Draw();
             btnQuit.Draw();
+            IMain srvMain = ServicesLocator.GetService<IMain>();
+            if (srvMain != null)
+            {
+                srvMain.GetSpriteBatch().Draw(header, new Vector2(srvMain.GetBounds().X/2,200), null, Color.White, 0, new Vector2(header.Width/2,header.Height/2), 1, SpriteEffects.None, 0);
+            }
         }
     }
 

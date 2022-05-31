@@ -73,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:ball_blue_small.png
 
+#begin ball_ghost.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ball_ghost.png
+
 #begin block_narrow.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -264,6 +276,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:explosion.png
+
+#begin Header.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Header.png
 
 #begin hole_large_end_alt.png
 /importer:TextureImporter

@@ -110,6 +110,7 @@
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ParticleManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicesLocator.cs" />
   </ItemGroup>

@@ -40,7 +40,7 @@ namespace CasseBriques
                 {
                     for(int j = 0; j <= bounds.Y; j += 64)
                     {
-                        srvMain.GetSpriteBatch().Draw(sBG[2], pos, null, Color.White, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0);
+                        srvMain.GetSpriteBatch().Draw(sBG[0], pos, null, Color.White, 0, new Vector2(0, 0), 1.0f, SpriteEffects.None, 0);
                         pos.Y = j;
                     }
                     pos.X = i;

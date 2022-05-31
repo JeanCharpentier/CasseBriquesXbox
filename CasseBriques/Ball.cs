@@ -17,6 +17,10 @@ namespace CasseBriques
         private Vector2 spd;
         private Vector2 base_spd;
 
+        private float elapsed;
+        private float spawnrate;
+
+
         private bool isMoving;
 
         public Rectangle rBall;
@@ -24,16 +28,28 @@ namespace CasseBriques
         public Ball(Texture2D pTexture):base(pTexture)
         {
             isMoving = false;
-            base_spd = new Vector2(2, -6);
+            base_spd = new Vector2(2, -8);
             pos = new Vector2((bounds.X / 2) - 20, bounds.Y - 200);
             spd = base_spd;
             rBall = new Rectangle((int)pos.X, (int)pos.Y, sprite.Width, sprite.Height);
+            spawnrate = 50f;
         }
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             if (isMoving)
             {
-                if (pos.X >= bounds.X - sprite.Width || pos.X <= 0)
+                elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (elapsed >= spawnrate)
+                {
+                    IParticle srvPart = ServicesLocator.GetService<IParticle>();
+                    if(srvPart != null)
+                    {
+                        srvPart.CreateParticle(pos);
+                    }
+                    elapsed = 0;
+                }
+                
+                if (pos.X >= bounds.X - (sprite.Width / 2 )|| pos.X <= sprite.Width/2)
                 {
                     spd.X *= -1;
                 }
@@ -46,7 +62,7 @@ namespace CasseBriques
                 rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
                 rBall.Y = (int)pos.Y - (int)origin.Y;
 
-            }else if(!isMoving && (GamePad.GetState(PlayerIndex.One).Buttons.B == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space)))
+            }else if(!isMoving && (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space)))
             {
                 isMoving = true;
             }else if (!isMoving)

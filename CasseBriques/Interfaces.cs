@@ -55,6 +55,11 @@ public interface IInput
 public interface IAnim
 {
     void AddAnimation(int sheetId,int width, int height, Vector2 pos);
-    void StartAnimation(int pAnim);
+    void StartAnimation(Animation pAnim);
     void StopAnim(Animation pAnim);
+}
+
+public interface IParticle
+{
+    void CreateParticle(Vector2 pos);
 }

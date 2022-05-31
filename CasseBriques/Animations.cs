@@ -23,8 +23,6 @@ namespace CasseBriques
             {
                 _spriteSheet = pTexture;
             }
-            //pos.X = bounds.X / 2; // Revoir au spawn !!!!
-            //pos.Y = bounds.Y / 2;
             scale = 1.5f;
             frameRate = 50f;
             frame = 0;
@@ -107,7 +105,7 @@ namespace CasseBriques
             Debug.WriteLine($"Animation créée en {_animList[0].pos}");
         }
 
-        public void StartAnimation(int pAnim)
+        public void StartAnimation(Animation pAnim)
         {
             throw new NotImplementedException();
         }
