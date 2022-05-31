@@ -149,6 +149,12 @@ namespace CasseBriques
 
             if (pCollider is Red)
             {
+                IAnim srvAnim = ServicesLocator.GetService<IAnim>();
+                if (srvAnim != null)
+                {
+                    srvAnim.AddAnimation(0, 40, 40, new Vector2(pCollider.GetPosition().X+(pCollider.GetCollRect().Width/2), pCollider.GetPosition().Y));
+                }
+
                 for (int i = _bricksList.Count-1; i >= 0; i--)
                 {
                     if (_bricksList[i].gridPosition.X == colPosX && _bricksList[i].gridPosition.Y == colPosY - 1)

@@ -51,3 +51,10 @@ public interface IInput
 {
 
 }
+
+public interface IAnim
+{
+    void AddAnimation(int sheetId,int width, int height, Vector2 pos);
+    void StartAnimation(int pAnim);
+    void StopAnim(Animation pAnim);
+}

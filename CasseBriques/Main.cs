@@ -20,6 +20,7 @@ namespace CasseBriques
         public BricksManager _briqueManager;
         public Landscape _landscape;
         public Hole _hole;
+        public AnimManager _animManager;
 
         public bool _gameplay; // Gameplay ou dans le menu ?
         public MenuScene _menu;
@@ -73,6 +74,8 @@ namespace CasseBriques
 
             _hole = new Hole(LoadT2D("hole_large_end_alt")); // A REVOIR !!!
 
+            _animManager = new AnimManager();
+
             base.Initialize();
         }
 
@@ -125,6 +128,7 @@ namespace CasseBriques
             {
                 _menu.Update();
             }
+            _animManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -158,7 +162,9 @@ namespace CasseBriques
                 _hole.Draw(); 
                 _ball.Draw();
                 _briqueManager.Draw();
-            }else
+                _animManager.Draw();
+            }
+            else
             {
                 _menu.Draw();
             }
