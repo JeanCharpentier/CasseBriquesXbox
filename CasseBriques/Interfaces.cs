@@ -14,10 +14,8 @@ public interface IMain
     Texture2D LoadT2D(string pTex);
     SpriteBatch GetSpriteBatch();
     void Shake(float pRadius);
-
     void QuitGame();
-
-    void LaunchGame();
+    void LaunchGame(bool pBool);
 }
 
 public interface ICollider

@@ -43,7 +43,7 @@ namespace CasseBriques
             IsMouseVisible = true; // test false sur la Xbox ?
 
             colorXbox = new Color(16, 124, 16);
-            _gameplay = true;
+            _gameplay = false;
         }
 
         protected override void Initialize()
@@ -110,6 +110,15 @@ namespace CasseBriques
 
                 _briqueManager.Update();
 
+                if(_briqueManager._bricksList.Count <= 0)
+                {
+                    IHole srvHole = ServicesLocator.GetService<IHole>();
+                    if(srvHole != null)
+                    {
+                        srvHole.SetState(true);
+                    }
+                }
+
                 _ball.Update();
             }
             else
@@ -146,8 +155,8 @@ namespace CasseBriques
             if (_gameplay)
             {
                 _paddle.Draw();
+                _hole.Draw(); 
                 _ball.Draw();
-                _hole.Draw();
                 _briqueManager.Draw();
             }else
             {
@@ -164,12 +173,10 @@ namespace CasseBriques
             
             return bounds;
         }
-
         public Texture2D LoadT2D(string pTex)
         {
             return Content.Load<Texture2D>(pTex);
         }
-
         public SpriteBatch GetSpriteBatch()
         {
             return _spriteBatch;
@@ -179,15 +186,13 @@ namespace CasseBriques
             shakeRadius = pRadius; 
             shakeViewport = true;
         }
-
         public void QuitGame()
         {
             Exit();
         }
-
-        public void LaunchGame()
+        public void LaunchGame(bool pBool)
         {
-            _gameplay = true;
+            _gameplay = pBool;
         }
     }
 }

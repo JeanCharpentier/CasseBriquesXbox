@@ -62,7 +62,7 @@ namespace CasseBriques
                 IMain srvMain = ServicesLocator.GetService<IMain>();
                 if (_currentBtn == 0)
                 {
-                    srvMain.LaunchGame();
+                    srvMain.LaunchGame(true);
                 }else if(_currentBtn == 1){
                     if(srvMain != null)
                     {

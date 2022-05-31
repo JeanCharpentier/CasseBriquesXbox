@@ -20,9 +20,8 @@ namespace CasseBriques
             ServicesLocator.AddService<ILevel>(this);
             _currentLevel = 1;
             _nbLevels = Directory.GetFiles("Levels/", "*.json", SearchOption.AllDirectories).Length;
+            Debug.WriteLine("Nb Levels :" + _nbLevels);
         }
-
-
         public int GetCurrentLevel()
         {
             return _currentLevel;
@@ -30,7 +29,7 @@ namespace CasseBriques
 
         public void SetCurrentLevel(int pLevel)
         {
-            if(_currentLevel < _nbLevels)
+            if (_currentLevel < _nbLevels)
             {
                 _currentLevel++;
                 IManager srvManager = ServicesLocator.GetService<IManager>();
@@ -38,11 +37,17 @@ namespace CasseBriques
                 {
                     srvManager.LoadFromJson(_currentLevel.ToString());
                 }
-            }else
+            }
+            else
             {
                 Debug.WriteLine("Fin du jeu !");
+                IMain srvMain = ServicesLocator.GetService<IMain>();
+                if (srvMain != null)
+                {
+                    srvMain.LaunchGame(false);
+                    _currentLevel = 1;
+                }
             }
-            
         }
     }
 }

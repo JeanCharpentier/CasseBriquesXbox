@@ -46,7 +46,6 @@ namespace CasseBriques
                 rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
                 rBall.Y = (int)pos.Y - (int)origin.Y;
 
-                //oldPos = pos; // Garde l'ancienne position pour affiner les rebonds
             }else if(!isMoving && (GamePad.GetState(PlayerIndex.One).Buttons.B == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space)))
             {
                 isMoving = true;

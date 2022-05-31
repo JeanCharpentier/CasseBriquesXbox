@@ -110,9 +110,9 @@ namespace CasseBriques
 
         public void Update()
         {
-            foreach(Brick b in _bricksList)
+            foreach (Brick b in _bricksList)
             {
-                Debug.WriteLine(_bricksList.Count);
+                
                 if (_bricksList.Count <= 0)
                 {
                     IHole srvHole = ServicesLocator.GetService<IHole>();
@@ -240,7 +240,7 @@ namespace CasseBriques
         public Brick(Texture2D pSprite):base(pSprite)
         {
             isFalling = false;
-            startPosition = pos;
+            
         }
 
 
@@ -249,18 +249,18 @@ namespace CasseBriques
             if (isFalling)
             {
                 pos.Y += 9;
-                //rBrick.Y = (int)bounds.Y + 300;
+                rBrick.Y = (int)bounds.Y + 300;
             }
             if(pos.Y > bounds.Y + 100)
             {
                 IManager srvBricks = ServicesLocator.GetService<IManager>(); // Détruit la brique
                 srvBricks.DeleteObject(this);
-                Debug.WriteLine("Brique détruite");
             }
         }
         public void SetCollRect()
         {
             rBrick = new Rectangle((int)pos.X - (int)origin.X, (int)pos.Y - (int)origin.Y, sprite.Width, sprite.Height); ;
+            startPosition = pos; // Garde une trace de la position de dpart
         }
 
         public Rectangle GetCollRect()
@@ -270,7 +270,7 @@ namespace CasseBriques
 
         public Vector2 GetPosition()
         {
-            return pos;
+            return startPosition;
         }
 
         public virtual bool ManageLife()
