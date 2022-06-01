@@ -74,6 +74,24 @@ namespace CasseBriques
 
             rPaddle.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
             rPaddle.Y = (int)pos.Y - (int)origin.Y;
+
+            // Orientation au démarrage
+            if (GamePad.GetState(PlayerIndex.One).Buttons.X == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                IVisee srvVisee = ServicesLocator.GetService<IVisee>();
+                if(srvVisee != null)
+                {
+                    srvVisee.Rotate(0.1f);
+                }
+            }
+            else if (GamePad.GetState(PlayerIndex.One).Buttons.B == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.E))
+            {
+                IVisee srvVisee = ServicesLocator.GetService<IVisee>();
+                if (srvVisee != null)
+                {
+                    srvVisee.Rotate(-0.1f);
+                }
+            }
         }
         public Vector2 GetPosition()
         {

@@ -19,6 +19,7 @@ namespace CasseBriques
 
         public Paddle _paddle;
         public Ball _ball;
+        public Laser _laser;
         public BricksManager _briqueManager;
         public Landscape _landscape;
         public Hole _hole;
@@ -45,7 +46,7 @@ namespace CasseBriques
             IsMouseVisible = false; // test false sur la Xbox ?
 
             colorXbox = new Color(16, 124, 16);
-            _gameplay = false;
+            _gameplay = true;
         }
 
         protected override void Initialize()
@@ -98,6 +99,7 @@ namespace CasseBriques
             {
                 // Update Collisions
                 _paddle.Update();
+
                 _ball.UpdateColl(_paddle);
                 _ball.UpdateColl(_hole);
 
@@ -164,6 +166,7 @@ namespace CasseBriques
                 _hole.Draw();
                 _partManager.Draw();
                 _ball.Draw();
+                
                 _briqueManager.Draw();
                 _animManager.Draw();
             }

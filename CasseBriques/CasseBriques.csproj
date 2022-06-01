@@ -16,6 +16,15 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProjectGuid>{C2C70117-C627-4BFE-AA1E-FCC7A0B8F0E5}</ProjectGuid>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <PackageCertificateThumbprint>ED5551BA0A6E7ACC9D61641617123850D9617887</PackageCertificateThumbprint>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -103,6 +112,7 @@
     <Compile Include="Interfaces.cs" />
     <Compile Include="JsonManager.cs" />
     <Compile Include="Landscape.cs" />
+    <Compile Include="Laser.cs" />
     <Compile Include="LevelManager.cs" />
     <Compile Include="MenuScene.cs" />
     <Compile Include="Paddle.cs" />
@@ -150,6 +160,7 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CasseBriques_TemporaryKey.pfx" />
     <None Include="Levels\level1.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

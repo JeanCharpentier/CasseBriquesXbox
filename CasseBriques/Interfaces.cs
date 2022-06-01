@@ -63,3 +63,9 @@ public interface IParticle
 {
     void CreateParticle(Vector2 pos);
 }
+
+public interface IVisee
+{
+    void Rotate(float pAngle);
+    Vector2 GetAngle();
+}

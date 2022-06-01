@@ -17,6 +17,8 @@ namespace CasseBriques
         private Vector2 spd;
         private Vector2 base_spd;
 
+        private Laser _laser;
+
         private float elapsed;
         private float spawnrate;
 
@@ -33,6 +35,12 @@ namespace CasseBriques
             spd = base_spd;
             rBall = new Rectangle((int)pos.X, (int)pos.Y, sprite.Width, sprite.Height);
             spawnrate = 50f;
+            IMain srvMain = ServicesLocator.GetService<IMain>();
+            if(srvMain != null)
+            {
+                _laser = new Laser(srvMain.LoadT2D("laser"));
+            }
+            
         }
         public void Update(GameTime gameTime)
         {
@@ -53,9 +61,14 @@ namespace CasseBriques
                 {
                     spd.X *= -1;
                 }
-                if (pos.Y >= bounds.Y - sprite.Height || pos.Y <= 20)
+                if (pos.Y <= sprite.Height / 2)
                 {
                     spd.Y *= -1;
+                }
+                if(pos.Y >= bounds.Y - (sprite.Height / 2))
+                {
+                    isMoving = false;
+                    spd = base_spd;
                 }
                 pos += spd;
 
@@ -64,9 +77,11 @@ namespace CasseBriques
 
             }else if(!isMoving && (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space)))
             {
+                spd = _laser.GetAngle();
                 isMoving = true;
             }else if (!isMoving)
             {
+                _laser.Update();
                 ICollider srvPaddle = ServicesLocator.GetService<ICollider>();
                 if(srvPaddle != null && srvPaddle is Paddle)
                 {
@@ -84,27 +99,26 @@ namespace CasseBriques
                 {
                     if (pCollider is Brick)
                     {
-                        Vector2 brickPos = pCollider.GetPosition();
                         Rectangle brickRect = pCollider.GetCollRect();
 
                         if(CF.CollideLeft(rBall, brickRect, spd))
                         {
-                            Debug.WriteLine("Touche gauche");
+                            //Debug.WriteLine("Touche gauche");
                             spd.X *= -1;
                         }
                         if (CF.CollideRight(rBall, brickRect, spd))
                         {
-                            Debug.WriteLine("Touche droite");
+                            //Debug.WriteLine("Touche droite");
                             spd.X *= -1;
                         }
                         if (CF.CollideTop(rBall, brickRect, spd))
                         {
-                            Debug.WriteLine("Touche haut");
+                            //Debug.WriteLine("Touche haut");
                             spd.Y *= -1;
                         }
                         if (CF.CollideBottom(rBall, brickRect, spd))
                         {
-                            Debug.WriteLine("Touche bas");
+                            //Debug.WriteLine("Touche bas");
                             spd.Y *= -1;
                         }
                         pCollider.ManageLife(); // Gère la vie et la mort de la brique
@@ -116,7 +130,7 @@ namespace CasseBriques
                         Rectangle paddleRect = pCollider.GetCollRect();
 
                         float ballDist = CF.Dist2(pos, paddleLoc);
-                        int deg = 10;
+                        int deg;
 
                         if (CF.CollideTop(rBall, paddleRect, spd))
                         {
@@ -166,7 +180,15 @@ namespace CasseBriques
                     }
                 }
             }
-            
+        }
+
+        public override void Draw()
+        {
+            if (!isMoving)
+            {
+                _laser.Draw();
+            }
+            base.Draw();
         }
     }
 }

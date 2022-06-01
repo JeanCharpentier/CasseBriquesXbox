@@ -34,7 +34,6 @@ namespace CasseBriques
                     _partList.Remove(_partList[i]);
                 }
             }
-            Debug.WriteLine(_partList.Count);
         }
 
         public void Draw()

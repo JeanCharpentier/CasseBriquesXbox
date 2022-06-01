@@ -8,8 +8,8 @@
 
   <Identity
     Name="4dfa9039-3fac-47ef-aca5-bc6f8564f920"
-    Publisher="CN=User"
-    Version="1.0.0.0" />
+    Publisher="CN=Jean Charpentier"
+    Version="0.1.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="4dfa9039-3fac-47ef-aca5-bc6f8564f920" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
