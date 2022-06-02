@@ -1,13 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct2D1;
+
 
 namespace CasseBriques
 {
@@ -101,24 +96,12 @@ namespace CasseBriques
                     {
                         Rectangle brickRect = pCollider.GetCollRect();
 
-                        if(CF.CollideLeft(rBall, brickRect, spd))
+                        if(CF.CollideLeft(rBall, brickRect, spd) || CF.CollideRight(rBall, brickRect, spd)) // Modifier la fonction pour sortir un INT pour "Switch Case"
                         {
-                            //Debug.WriteLine("Touche gauche");
                             spd.X *= -1;
                         }
-                        if (CF.CollideRight(rBall, brickRect, spd))
+                        if (CF.CollideTop(rBall, brickRect, spd) || CF.CollideBottom(rBall, brickRect, spd))
                         {
-                            //Debug.WriteLine("Touche droite");
-                            spd.X *= -1;
-                        }
-                        if (CF.CollideTop(rBall, brickRect, spd))
-                        {
-                            //Debug.WriteLine("Touche haut");
-                            spd.Y *= -1;
-                        }
-                        if (CF.CollideBottom(rBall, brickRect, spd))
-                        {
-                            //Debug.WriteLine("Touche bas");
                             spd.Y *= -1;
                         }
                         pCollider.ManageLife(); // Gère la vie et la mort de la brique

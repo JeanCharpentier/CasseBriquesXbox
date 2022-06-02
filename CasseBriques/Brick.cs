@@ -3,12 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
 
 namespace CasseBriques
 {
@@ -110,10 +104,6 @@ namespace CasseBriques
                 _spritelist[5] = srvMain.LoadT2D("button_orange"); 
                 _spritelist[6] = srvMain.LoadT2D("button_red");
                 _spritelist[7] = srvMain.LoadT2D("button_grey");
-            }
-            else
-            {
-                Trace.WriteLine("!!! Echec de chargement de l'image de brique");
             }
             LoadFromJson("1");
         }

@@ -1,11 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CasseBriques
 {
@@ -24,10 +19,6 @@ namespace CasseBriques
                 sBG[1] = srvMain.LoadT2D("background_blue"); // Chargée à chaque nouvelle brique !!! A REVOIR !
                 sBG[2] = srvMain.LoadT2D("background_grey"); // Chargée à chaque nouvelle brique !!! A REVOIR !
                 sBG[3] = srvMain.LoadT2D("background_brown"); // Chargée à chaque nouvelle brique !!! A REVOIR !
-            }
-            else
-            {
-                Trace.WriteLine("!!! Echec de chargement de l'image de brique");
             }
         }
         public void Draw()

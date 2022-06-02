@@ -1,12 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
+﻿
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CasseBriques
 {
@@ -20,7 +14,6 @@ namespace CasseBriques
             ServicesLocator.AddService<ILevel>(this);
             _currentLevel = 1;
             _nbLevels = Directory.GetFiles("Levels/", "*.json", SearchOption.AllDirectories).Length;
-            Debug.WriteLine("Nb Levels :" + _nbLevels);
         }
         public int GetCurrentLevel()
         {
