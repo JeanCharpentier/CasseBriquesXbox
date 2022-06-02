@@ -107,10 +107,6 @@ namespace CasseBriques
                 {
                     _ball.UpdateColl(_briqueManager._bricksList[i]);
                 }
-                for (int i = _briqueManager._staticList.Count - 1; i >= 0; i--)
-                {
-                    _ball.UpdateColl(_briqueManager._staticList[i]);
-                }
 
                 for (int i = _briqueManager._spooler.Count - 1; i >= 0; i--) // Suppression des briques à supprimer de la liste (cpt Obvious)
                 {

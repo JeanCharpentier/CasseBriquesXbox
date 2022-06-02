@@ -15,7 +15,6 @@ namespace CasseBriques
     public class BricksManager : IManager
     {
         public List<Brick> _bricksList;
-        public List<Brick> _staticList;
 
         public Texture2D[] _spritelist;
 
@@ -24,7 +23,6 @@ namespace CasseBriques
         public BricksManager()
         {
             _bricksList = new List<Brick>();
-            _staticList = new List<Brick>();
             _spooler = new List<Brick>();
             ServicesLocator.AddService<IManager>(this);
         }
@@ -32,7 +30,6 @@ namespace CasseBriques
         public void LoadFromJson(string pJsonFile)
         {
             _bricksList.Clear();
-            _staticList.Clear();
             IJson srvJson = ServicesLocator.GetService<IJson>();
             string[] lignes = srvJson.ReadJson("Levels/level"+pJsonFile+".json").map.Split('/');
             int lines = 0;
@@ -81,14 +78,7 @@ namespace CasseBriques
                         b.pos = new Vector2(64 + (128 * cols), 20 + (53 * lines));
                         b.SetCollRect();
                         b.gridPosition = new Vector2(cols, lines);
-                        if(b is Grey)
-                        {
-                            _staticList.Add(b);
-                        }else
-                        {
-                            _bricksList.Add(b);
-                        }
-                        
+                        _bricksList.Add(b);
                     }
                     cols++;
 
@@ -120,10 +110,10 @@ namespace CasseBriques
 
         public void Update()
         {
-            
             foreach (Brick b in _bricksList)
             {
-                if(_bricksList.Count <= 0)
+                
+                if (_bricksList.Count <= 0)
                 {
                     IHole srvHole = ServicesLocator.GetService<IHole>();
                     if (srvHole != null)
@@ -133,10 +123,6 @@ namespace CasseBriques
                 }
                 b.sprite = _spritelist[b.sprNum];
                 b.Update();
-            }
-            foreach(Brick s in _staticList)
-            {
-                s.Update();
             }
         }
         public void Draw()
@@ -148,10 +134,6 @@ namespace CasseBriques
                     b.sprNum = 0;
                 }
                 b.Draw();
-            }
-            foreach (Brick s in _staticList)
-            {
-                s.Draw();
             }
         }
 
