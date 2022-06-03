@@ -11,7 +11,7 @@ namespace CasseBriques
         public List<Brick> _bricksList;
         public List<Brick> _staticList;
 
-        public Texture2D[] _spritelist;
+        public string[] _spritelist;
 
         public List<Brick> _spooler; // Liste des briques a supprimer !
 
@@ -92,18 +92,18 @@ namespace CasseBriques
         }
         public void Load()
         {
-            _spritelist = new Texture2D[8];
+            _spritelist = new string[8];
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
-                _spritelist[0] = srvMain.LoadT2D("button_violet");
-                _spritelist[1] = srvMain.LoadT2D("button_indigo"); 
-                _spritelist[2] = srvMain.LoadT2D("button_blue"); 
-                _spritelist[3] = srvMain.LoadT2D("button_green"); 
-                _spritelist[4] = srvMain.LoadT2D("button_yellow"); 
-                _spritelist[5] = srvMain.LoadT2D("button_orange"); 
-                _spritelist[6] = srvMain.LoadT2D("button_red");
-                _spritelist[7] = srvMain.LoadT2D("button_grey");
+                _spritelist[0] = "button_violet";
+                _spritelist[1] = "button_indigo"; 
+                _spritelist[2] = "button_blue"; 
+                _spritelist[3] = "button_green"; 
+                _spritelist[4] = "button_yellow"; 
+                _spritelist[5] = "button_orange"; 
+                _spritelist[6] = "button_red";
+                _spritelist[7] = "button_grey";
             }
             LoadFromJson("1");
         }
@@ -121,7 +121,7 @@ namespace CasseBriques
                         srvHole.SetState(true);
                     }
                 }
-                b.sprite = _spritelist[b.sprNum];
+                //b.sprite = _spritelist[b.sprNum];
                 b.Update();
             }
             foreach(Brick s in _staticList)
@@ -251,7 +251,7 @@ namespace CasseBriques
         public bool isFalling;
 
 
-        public Brick(Texture2D pSprite):base(pSprite)
+        public Brick(string pTexString):base(pTexString)
         {
             isFalling = false;
         }
@@ -326,7 +326,7 @@ namespace CasseBriques
     }
     public class Yellow : Brick
     {
-        public Yellow(Texture2D pTexture) : base(pTexture)
+        public Yellow(string pTexString):base(pTexString)
         {
             life = 4;
             sprNum = life;
@@ -335,7 +335,7 @@ namespace CasseBriques
 
     public class Blue : Brick
     {
-        public Blue(Texture2D pTexture) : base(pTexture)
+        public Blue(string pTexString) : base(pTexString)
         {
             life = 2;
             sprNum = life;
@@ -344,7 +344,7 @@ namespace CasseBriques
 
     public class Violet : Brick
     {
-        public Violet(Texture2D pTexture) : base(pTexture)
+        public Violet(string pTexString) : base(pTexString)
         {
             life = 0;
             sprNum = life;
@@ -353,7 +353,7 @@ namespace CasseBriques
 
     public class Indigo : Brick
     {
-        public Indigo(Texture2D pTexture) : base(pTexture)
+        public Indigo(string pTexString) : base(pTexString)
         {
             life = 1;
             sprNum = life;
@@ -362,7 +362,7 @@ namespace CasseBriques
 
     public class Green : Brick
     {
-        public Green(Texture2D pTexture) : base(pTexture)
+        public Green(string pTexString) : base(pTexString)
         {
             life = 3;
             sprNum = life;
@@ -371,7 +371,7 @@ namespace CasseBriques
 
     public class Orange : Brick
     {
-        public Orange(Texture2D pTexture) : base(pTexture)
+        public Orange(string pTexString) : base(pTexString)
         {
             life = 5;
             sprNum = life;
@@ -380,7 +380,7 @@ namespace CasseBriques
 
     public class Red : Brick // Briques explosives
     {
-        public Red(Texture2D pTexture) : base(pTexture)
+        public Red(string pTexString) : base(pTexString)
         {
             life = 0;
             sprNum = 6;
@@ -389,7 +389,7 @@ namespace CasseBriques
 
     public class Grey : Brick // Murs incassables
     {
-        public Grey(Texture2D pTexture) : base(pTexture)
+        public Grey(string pTexString) : base(pTexString)
         {
             life = 0;
             sprNum = 7;

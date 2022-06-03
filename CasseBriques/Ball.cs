@@ -22,19 +22,25 @@ namespace CasseBriques
 
         public Rectangle rBall;
 
-        public Ball(Texture2D pTexture):base(pTexture)
+        public Ball(string pTexString):base(pTexString)
         {
             isMoving = false;
             base_spd = new Vector2(2, -8);
+            IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
+            if(srvImg != null)
+            {
+                sprite = srvImg.LoadT2D(pTexString);
+                _laser = new Laser("laser");
+            }
             pos = new Vector2((bounds.X / 2) - 20, bounds.Y - 200);
             spd = base_spd;
             rBall = new Rectangle((int)pos.X, (int)pos.Y, sprite.Width, sprite.Height);
             spawnrate = 50f;
-            IMain srvMain = ServicesLocator.GetService<IMain>();
+            /*IMain srvMain = ServicesLocator.GetService<IMain>();
             if(srvMain != null)
             {
                 _laser = new Laser(srvMain.LoadT2D("laser"));
-            }
+            }*/
             
         }
         public void Update(GameTime gameTime)

@@ -8,16 +8,14 @@ namespace CasseBriques
     public class ParticleManager:IParticle
     {
         List<Particle> _partList;
-        Texture2D sprTexture;
+        string sprTexture;
         public ParticleManager()
         {
             ServicesLocator.AddService<IParticle>(this);
             _partList = new List<Particle>();
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if(srvMain != null)
-            {
-                sprTexture = srvMain.LoadT2D("ball_ghost");
-            }
+
+            sprTexture = "ball_ghost";
+            
         }
 
         public void Update(GameTime gameTime)
@@ -51,7 +49,7 @@ namespace CasseBriques
         private float elapsed;
         private float frameRate;
         public float opacity;
-        public Particle(Texture2D pTexture, Vector2 position):base(pTexture)
+        public Particle(string pTexString, Vector2 position):base(pTexString)
         {
             frameRate = 20f;
             opacity = 1f;

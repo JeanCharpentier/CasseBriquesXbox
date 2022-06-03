@@ -8,7 +8,7 @@ namespace CasseBriques
     public class Laser:Entity,IVisee
     {
         public float angle;
-        public Laser(Texture2D pTexture):base(pTexture)
+        public Laser(string pTexString):base(pTexString)
         {
             ServicesLocator.AddService<IVisee>(this);
             origin.X = 0;

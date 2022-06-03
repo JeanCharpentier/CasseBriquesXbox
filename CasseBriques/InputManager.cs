@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CasseBriques
 {
-    public class InputManager:IInput
+    public class InputManager
     {
         public InputManager()
         {

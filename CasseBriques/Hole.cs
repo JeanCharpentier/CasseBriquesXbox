@@ -11,15 +11,15 @@ namespace CasseBriques
         public Texture2D closedSprite;
 
         public bool isOpen;
-        public Hole(Texture2D pTexture):base(pTexture)
+        public Hole(string pTexString):base(pTexString)
         {
             ServicesLocator.AddService<IHole>(this);
             pos = new Vector2(bounds.X / 2, 200 - (sprite.Height / 4));
             rHole = new Rectangle((int)pos.X-(int)origin.X, (int)pos.Y-(int)origin.Y, (int)sprite.Width, (int)sprite.Height);
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if(srvMain != null)
+            IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
+            if(srvImg != null)
             {
-                closedSprite = srvMain.LoadT2D("hole_large_end_alt_locked");
+                closedSprite = srvImg.LoadT2D("hole_large_end_alt_locked");
             }
             isOpen = false;
         }

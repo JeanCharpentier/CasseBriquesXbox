@@ -16,12 +16,12 @@ namespace CasseBriques
         public MenuScene()
         {
             _btnList = new Entity[2];
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
+            IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
+            if (srvImg != null)
             {
-                btnPlay = new Button(srvMain.LoadT2D("button_play"));
-                btnQuit = new Button(srvMain.LoadT2D("button_quit"));
-                header = srvMain.LoadT2D("Header");
+                btnPlay = new Button("button_play");
+                btnQuit = new Button("button_quit");
+                header = srvImg.LoadT2D("Header");
             }
             btnPlay.pos = new Vector2(btnPlay.bounds.X / 2, 400);
             btnPlay.scale = 2.0f;
@@ -82,7 +82,7 @@ namespace CasseBriques
 
     public class Button : Entity
     {
-        public Button(Texture2D pTexture) : base(pTexture)
+        public Button(string pTexString) : base(pTexString)
         {
 
         }

@@ -18,7 +18,7 @@ namespace CasseBriques
         const int maxVel = 15;
         const float factVel = 1.5f;
 
-        private Paddle(Texture2D pTexture):base(pTexture)
+        private Paddle(string pTexString):base(pTexString)
         {
             ServicesLocator.AddService<ICollider>(this);
             pos = new Vector2(this.bounds.X / 2, this.bounds.Y - 100);
@@ -30,13 +30,14 @@ namespace CasseBriques
         {
             if(paddleInstance == null)
             {
-                IMain srvMain = ServicesLocator.GetService<IMain>();
-                if (srvMain != null)
+                paddleInstance = new Paddle("block_narrow");
+                /*IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
+                if (srvImg != null)
                 {
                     Texture2D sPaddle;
-                    sPaddle = srvMain.LoadT2D("block_narrow");
-                    paddleInstance = new Paddle(sPaddle);
-                }
+                    //sPaddle = srvImg.LoadT2D("block_narrow");
+                    paddleInstance = new Paddle("block_narrow");
+                }*/
             }
             return paddleInstance;
         }

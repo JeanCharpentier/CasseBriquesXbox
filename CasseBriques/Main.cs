@@ -17,6 +17,8 @@ namespace CasseBriques
         public AnimManager _animManager;
         public ParticleManager _partManager;
 
+        public ImageLoader _imageLoader;
+
         public Paddle _paddle;
         public Ball _ball;
         public Laser _laser;
@@ -46,7 +48,7 @@ namespace CasseBriques
             IsMouseVisible = false;
 
             colorXbox = new Color(16, 124, 16);
-            _gameplay = false;
+            _gameplay = true; // Menu ou Gameplay ?
         }
 
         protected override void Initialize()
@@ -65,18 +67,20 @@ namespace CasseBriques
             _lvlManager = new LevelManager();
             _partManager = new ParticleManager();
             _animManager = new AnimManager();
+            _imageLoader = new ImageLoader(this);
 
             _menu = new MenuScene();
 
             _paddle = Paddle.GetInstance();
 
-            _ball = new Ball(LoadT2D("ball_blue_small")); // A REVOIR !!!
+            //_ball = new Ball(LoadT2D("ball_blue_small")); // A REVOIR !!!
+            _ball = new Ball("ball_blue_small"); // A REVOIR !!!
 
             _briqueManager = new BricksManager();
 
             _landscape = new Landscape();
 
-            _hole = new Hole(LoadT2D("hole_large_end_alt")); // A REVOIR !!!
+            _hole = new Hole("hole_large_end_alt"); // A REVOIR !!!
 
             base.Initialize();
         }

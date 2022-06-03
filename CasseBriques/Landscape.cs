@@ -15,10 +15,15 @@ namespace CasseBriques
             if (srvMain != null)
             {
                 bounds = srvMain.GetBounds();
-                sBG[0] = srvMain.LoadT2D("background_green"); // Chargée à chaque nouvelle brique !!! A REVOIR !
-                sBG[1] = srvMain.LoadT2D("background_blue"); // Chargée à chaque nouvelle brique !!! A REVOIR !
-                sBG[2] = srvMain.LoadT2D("background_grey"); // Chargée à chaque nouvelle brique !!! A REVOIR !
-                sBG[3] = srvMain.LoadT2D("background_brown"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+            }
+
+            IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
+            if (srvImg != null)
+            {
+                sBG[0] = srvImg.LoadT2D("background_green"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+                sBG[1] = srvImg.LoadT2D("background_blue"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+                sBG[2] = srvImg.LoadT2D("background_grey"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+                sBG[3] = srvImg.LoadT2D("background_brown"); // Chargée à chaque nouvelle brique !!! A REVOIR !
             }
         }
         public void Draw()

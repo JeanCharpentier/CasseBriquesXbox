@@ -11,7 +11,7 @@ namespace CasseBriques
         public Vector2 origin;
         public Vector2 bounds;
         public float scale;
-        public Entity(Texture2D pSprite)
+        public Entity(string pTexString)
         {
             IMain srvScreen = ServicesLocator.GetService<IMain>();
             if (srvScreen != null)
@@ -22,7 +22,11 @@ namespace CasseBriques
             {
                 bounds = new Vector2(1920, 1080);
             }
-            sprite = pSprite;
+            IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
+            if (srvImg != null)
+            {
+                sprite = srvImg.LoadT2D(pTexString);
+            }
             scale = 1.0f;
             origin = new Vector2(sprite.Width / 2, sprite.Height / 2);
         }

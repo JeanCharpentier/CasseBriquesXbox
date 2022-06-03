@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 public interface IMain
 {
     Vector2 GetBounds();
-    Texture2D LoadT2D(string pTex);
+    //Texture2D LoadT2D(string pTex);
     SpriteBatch GetSpriteBatch();
     void Shake(float pRadius);
     void QuitGame();
@@ -42,9 +42,9 @@ public interface ILevel
     void SetCurrentLevel(int pLevel);
 }
 
-public interface IInput
+public interface IImageLoader
 {
-
+    Texture2D LoadT2D(string pTex);
 }
 
 public interface IAnim

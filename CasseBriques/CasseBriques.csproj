@@ -108,6 +108,7 @@
     <Compile Include="CF.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Hole.cs" />
+    <Compile Include="ImageLoader.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="JsonManager.cs" />
