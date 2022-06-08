@@ -11,7 +11,8 @@ namespace CasseBriques
         public List<Brick> _bricksList;
         public List<Brick> _staticList;
 
-        public string[] _spritelist;
+        public string[] _sprStrings;
+        private Texture2D[] _sprTex;
 
         public List<Brick> _spooler; // Liste des briques a supprimer !
 
@@ -43,28 +44,28 @@ namespace CasseBriques
                             b = null;
                             break;
                         case "1":
-                            b = new Violet(_spritelist[0]);
+                            b = new Violet(_sprStrings[0]);
                             break;
                         case "2":
-                            b = new Indigo(_spritelist[1]);
+                            b = new Indigo(_sprStrings[1]);
                             break;
                         case "3":
-                            b = new Blue(_spritelist[2]);
+                            b = new Blue(_sprStrings[2]);
                             break;
                         case "4":
-                            b = new Green(_spritelist[3]);
+                            b = new Green(_sprStrings[3]);
                             break;
                         case "5":
-                            b = new Yellow(_spritelist[4]);
+                            b = new Yellow(_sprStrings[4]);
                             break;
                         case "6":
-                            b = new Orange(_spritelist[5]);
+                            b = new Orange(_sprStrings[5]);
                             break;
                         case "7":
-                            b = new Red(_spritelist[6]);
+                            b = new Red(_sprStrings[6]);
                             break;
                         case "8":
-                            b = new Grey(_spritelist[7]);
+                            b = new Grey(_sprStrings[7]);
                             break;
                         default:
                             b = null;
@@ -92,18 +93,29 @@ namespace CasseBriques
         }
         public void Load()
         {
-            _spritelist = new string[8];
-            IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
+            _sprStrings = new string[8];
+            _sprStrings[0] = "button_violet";
+            _sprStrings[1] = "button_indigo";
+            _sprStrings[2] = "button_blue";
+            _sprStrings[3] = "button_green";
+            _sprStrings[4] = "button_yellow";
+            _sprStrings[5] = "button_orange";
+            _sprStrings[6] = "button_red";
+            _sprStrings[7] = "button_grey";
+
+            // Double tableau que c'est moche
+            _sprTex = new Texture2D[8]; // Tableau de textures pour changer au runtime selon la vie des briques
+            IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
+            if (srvImg != null)
             {
-                _spritelist[0] = "button_violet";
-                _spritelist[1] = "button_indigo"; 
-                _spritelist[2] = "button_blue"; 
-                _spritelist[3] = "button_green"; 
-                _spritelist[4] = "button_yellow"; 
-                _spritelist[5] = "button_orange"; 
-                _spritelist[6] = "button_red";
-                _spritelist[7] = "button_grey";
+                _sprTex[0] = srvImg.LoadT2D(_sprStrings[0]);
+                _sprTex[1] = srvImg.LoadT2D(_sprStrings[1]);
+                _sprTex[2] = srvImg.LoadT2D(_sprStrings[2]);
+                _sprTex[3] = srvImg.LoadT2D(_sprStrings[3]);
+                _sprTex[4] = srvImg.LoadT2D(_sprStrings[4]);
+                _sprTex[5] = srvImg.LoadT2D(_sprStrings[5]);
+                _sprTex[6] = srvImg.LoadT2D(_sprStrings[6]);
+                _sprTex[7] = srvImg.LoadT2D(_sprStrings[7]);
             }
             LoadFromJson("1");
         }
@@ -121,7 +133,7 @@ namespace CasseBriques
                         srvHole.SetState(true);
                     }
                 }
-                //b.sprite = _spritelist[b.sprNum];
+                b.sprite = _sprTex[b.sprNum];
                 b.Update();
             }
             foreach(Brick s in _staticList)

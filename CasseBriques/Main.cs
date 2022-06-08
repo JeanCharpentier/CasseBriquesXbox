@@ -27,6 +27,7 @@ namespace CasseBriques
         public Hole _hole;
 
         public bool _gameplay; // Gameplay ou dans le menu ?
+        private bool _GameOver;
         public MenuScene _menu;
 
         // Ecran
@@ -48,13 +49,13 @@ namespace CasseBriques
             IsMouseVisible = false;
 
             colorXbox = new Color(16, 124, 16);
-            _gameplay = true; // Menu ou Gameplay ?
+            _gameplay = false; // Menu ou Gameplay ?
         }
 
         protected override void Initialize()
         {
             // Taille de l'écran fixe
-            _graphics.IsFullScreen = false; // A REVOIR POUR LA XBOX, Tester en 1080p ?
+            _graphics.IsFullScreen = false;
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
             _graphics.ApplyChanges();
@@ -62,6 +63,7 @@ namespace CasseBriques
             rand = new Random();
             shakeDuration = 2;
             shakeTimer = shakeDuration;
+            _GameOver = false;
 
             _JsonManager = new JsonManager();
             _lvlManager = new LevelManager();
@@ -69,18 +71,18 @@ namespace CasseBriques
             _animManager = new AnimManager();
             _imageLoader = new ImageLoader(this);
 
+            _landscape = new Landscape();
+            _hole = new Hole("hole_large_end_alt");
+
             _menu = new MenuScene();
 
             _paddle = Paddle.GetInstance();
 
-            //_ball = new Ball(LoadT2D("ball_blue_small")); // A REVOIR !!!
-            _ball = new Ball("ball_blue_small"); // A REVOIR !!!
+            _ball = new Ball("ball_blue_small");
 
             _briqueManager = new BricksManager();
 
-            _landscape = new Landscape();
-
-            _hole = new Hole("hole_large_end_alt"); // A REVOIR !!!
+            
 
             base.Initialize();
         }
@@ -172,10 +174,9 @@ namespace CasseBriques
             {
                 _paddle.Draw();
                 _hole.Draw();
+                _briqueManager.Draw();
                 _partManager.Draw();
                 _ball.Draw();
-                
-                _briqueManager.Draw();
                 _animManager.Draw();
             }
             else
@@ -212,6 +213,16 @@ namespace CasseBriques
         public void LaunchGame(bool pBool)
         {
             _gameplay = pBool;
+        }
+
+        public void SetGameOver(bool pGO)
+        {
+            _GameOver = pGO;
+        }
+
+        public bool GetGameOver()
+        {
+            return _GameOver;
         }
     }
 }

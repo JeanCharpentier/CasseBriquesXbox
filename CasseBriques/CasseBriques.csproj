@@ -109,7 +109,6 @@
     <Compile Include="Entity.cs" />
     <Compile Include="Hole.cs" />
     <Compile Include="ImageLoader.cs" />
-    <Compile Include="InputManager.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="JsonManager.cs" />
     <Compile Include="Landscape.cs" />
@@ -124,6 +123,7 @@
     <Compile Include="ParticleManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicesLocator.cs" />
+    <Compile Include="UIManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

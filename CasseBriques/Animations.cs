@@ -15,11 +15,6 @@ namespace CasseBriques
         int frame;
         public Animation(string pTexString, int width, int height, Vector2 position):base(pTexString)
         {
-            /*IMain srvMain = ServicesLocator.GetService<IMain>();
-            if(srvMain != null)
-            {
-                _spriteSheet = pTexture;
-            }*/
             _spriteSheet = sprite;
             scale = 1.5f;
             frameRate = 50f;
@@ -50,8 +45,6 @@ namespace CasseBriques
         }
         public override void Draw()
         {
-            //base.Draw();
-
             IMain srvMain = ServicesLocator.GetService<IMain>();
             if (srvMain != null)
             {
@@ -63,22 +56,14 @@ namespace CasseBriques
     public class AnimManager : IAnim
     {
         List<Animation> _animList;
-        //Texture2D[] _sheetsList;
         string[] _sheetsList;
         public AnimManager()
         {
             ServicesLocator.AddService<IAnim>(this);
             _animList = new List<Animation>();
-            //_sheetsList = new Texture2D[1];
             _sheetsList = new string[1];
 
             _sheetsList[0] = "explosion";
-
-            /*IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
-            if (srvImg != null)
-            {
-                _sheetsList[0] = srvImg.LoadT2D("explosion");
-            }*/
         }
 
 

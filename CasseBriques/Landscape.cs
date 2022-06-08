@@ -20,10 +20,10 @@ namespace CasseBriques
             IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
             if (srvImg != null)
             {
-                sBG[0] = srvImg.LoadT2D("background_green"); // Chargée à chaque nouvelle brique !!! A REVOIR !
-                sBG[1] = srvImg.LoadT2D("background_blue"); // Chargée à chaque nouvelle brique !!! A REVOIR !
-                sBG[2] = srvImg.LoadT2D("background_grey"); // Chargée à chaque nouvelle brique !!! A REVOIR !
-                sBG[3] = srvImg.LoadT2D("background_brown"); // Chargée à chaque nouvelle brique !!! A REVOIR !
+                sBG[0] = srvImg.LoadT2D("background_green");
+                sBG[1] = srvImg.LoadT2D("background_blue");
+                sBG[2] = srvImg.LoadT2D("background_grey");
+                sBG[3] = srvImg.LoadT2D("background_brown");
             }
         }
         public void Draw()

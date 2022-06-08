@@ -17,16 +17,22 @@ namespace CasseBriques
         private float elapsed;
         private float spawnrate;
 
-
         private bool isMoving;
+        private int lives;
+        private UIText GO;
 
         public Rectangle rBall;
 
+        IMain srvMain = ServicesLocator.GetService<IMain>();
+        IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
+        IParticle srvPart = ServicesLocator.GetService<IParticle>();
+        ICollider srvPaddle = ServicesLocator.GetService<ICollider>();
+        IHole srvHole = ServicesLocator.GetService<IHole>();
+        ILevel srvLevel = ServicesLocator.GetService<ILevel>();
         public Ball(string pTexString):base(pTexString)
         {
             isMoving = false;
             base_spd = new Vector2(2, -8);
-            IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
             if(srvImg != null)
             {
                 sprite = srvImg.LoadT2D(pTexString);
@@ -36,12 +42,7 @@ namespace CasseBriques
             spd = base_spd;
             rBall = new Rectangle((int)pos.X, (int)pos.Y, sprite.Width, sprite.Height);
             spawnrate = 50f;
-            /*IMain srvMain = ServicesLocator.GetService<IMain>();
-            if(srvMain != null)
-            {
-                _laser = new Laser(srvMain.LoadT2D("laser"));
-            }*/
-            
+            lives = 2;
         }
         public void Update(GameTime gameTime)
         {
@@ -50,7 +51,6 @@ namespace CasseBriques
                 elapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (elapsed >= spawnrate)
                 {
-                    IParticle srvPart = ServicesLocator.GetService<IParticle>();
                     if(srvPart != null)
                     {
                         srvPart.CreateParticle(pos);
@@ -68,8 +68,19 @@ namespace CasseBriques
                 }
                 if(pos.Y >= bounds.Y - (sprite.Height / 2))
                 {
-                    isMoving = false;
-                    spd = base_spd;
+                    if(lives > 0)
+                    {
+                        isMoving = false;
+                        spd = base_spd;
+                        lives--;
+                    }else
+                    {
+                        isMoving = false;
+                        spd = base_spd;
+                        srvMain.SetGameOver(true);
+                        GO = new UIText("GOver");
+                    }
+                    
                 }
                 pos += spd;
 
@@ -83,7 +94,6 @@ namespace CasseBriques
             }else if (!isMoving)
             {
                 _laser.Update();
-                ICollider srvPaddle = ServicesLocator.GetService<ICollider>();
                 if(srvPaddle != null && srvPaddle is Paddle)
                 {
                     pos.X = srvPaddle.GetPosition().X;
@@ -143,12 +153,11 @@ namespace CasseBriques
 
                     if (pCollider is Hole)
                     {
-                        IHole srvHole = ServicesLocator.GetService<IHole>();
                         if(srvHole.GetState())
                         {
                             isMoving = false;
                             spd = base_spd;
-                            ICollider srvPaddle = ServicesLocator.GetService<ICollider>();
+                            
                             if (srvPaddle != null && srvPaddle is Paddle)
                             {
                                 pos.X = srvPaddle.GetPosition().X;
@@ -157,7 +166,6 @@ namespace CasseBriques
                                 rBall.Y = (int)pos.Y - (int)origin.Y;
                             }
 
-                            ILevel srvLevel = ServicesLocator.GetService<ILevel>();
                             if (srvLevel != null)
                             {
                                 srvLevel.SetCurrentLevel(0);
@@ -175,7 +183,14 @@ namespace CasseBriques
             {
                 _laser.Draw();
             }
-            base.Draw();
+            if(srvMain.GetGameOver())
+            {
+                GO.Draw();
+            }else
+            {
+                base.Draw();
+            }
+            
         }
     }
 }

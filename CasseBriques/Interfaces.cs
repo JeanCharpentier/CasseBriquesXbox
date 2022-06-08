@@ -11,6 +11,8 @@ public interface IMain
     void Shake(float pRadius);
     void QuitGame();
     void LaunchGame(bool pBool);
+    void SetGameOver(bool pGO);
+    bool GetGameOver();
 }
 
 public interface ICollider

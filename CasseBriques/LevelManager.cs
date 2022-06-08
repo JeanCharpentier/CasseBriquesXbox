@@ -31,7 +31,7 @@ namespace CasseBriques
                     srvManager.LoadFromJson(_currentLevel.ToString());
                 }
             }
-            else
+            else // Fin de jeu
             {
                 Debug.WriteLine("Fin du jeu !");
                 IMain srvMain = ServicesLocator.GetService<IMain>();

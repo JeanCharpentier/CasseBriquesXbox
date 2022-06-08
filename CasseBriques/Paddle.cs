@@ -17,6 +17,7 @@ namespace CasseBriques
 
         const int maxVel = 15;
         const float factVel = 1.5f;
+        IMain srvMain;
 
         private Paddle(string pTexString):base(pTexString)
         {
@@ -25,25 +26,21 @@ namespace CasseBriques
             origin = new Vector2(sprite.Width / 2, sprite.Height /2);
             spd = new Vector2(1.5f, 1.5f);
             rPaddle = new Rectangle((int)pos.X - (int)origin.X, (int)pos.Y - (int)origin.Y, sprite.Width, sprite.Height);
+
+            srvMain = ServicesLocator.GetService<IMain>();
         }
         public static Paddle GetInstance()
         {
             if(paddleInstance == null)
             {
                 paddleInstance = new Paddle("block_narrow");
-                /*IImageLoader srvImg = ServicesLocator.GetService<IImageLoader>();
-                if (srvImg != null)
-                {
-                    Texture2D sPaddle;
-                    //sPaddle = srvImg.LoadT2D("block_narrow");
-                    paddleInstance = new Paddle("block_narrow");
-                }*/
             }
             return paddleInstance;
         }
 
         public void Update()
         {
+            IVisee srvVisee = ServicesLocator.GetService<IVisee>();
             if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Left))
             {
                 if (vel.X >= -maxVel)
@@ -74,7 +71,6 @@ namespace CasseBriques
             // Orientation au démarrage
             if (GamePad.GetState(PlayerIndex.One).Buttons.X == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                IVisee srvVisee = ServicesLocator.GetService<IVisee>();
                 if(srvVisee != null)
                 {
                     srvVisee.Rotate(0.1f);
@@ -82,12 +78,19 @@ namespace CasseBriques
             }
             else if (GamePad.GetState(PlayerIndex.One).Buttons.B == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.E))
             {
-                IVisee srvVisee = ServicesLocator.GetService<IVisee>();
                 if (srvVisee != null)
                 {
                     srvVisee.Rotate(-0.1f);
                 }
             }
+        }
+
+        public override void Draw()
+        {
+            if(!srvMain.GetGameOver())
+            {
+                base.Draw();
+            }     
         }
         public Vector2 GetPosition()
         {

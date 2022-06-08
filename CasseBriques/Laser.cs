@@ -26,7 +26,7 @@ namespace CasseBriques
         public override void Draw()
         {
             IMain srvMain = ServicesLocator.GetService<IMain>();
-            if (srvMain != null)
+            if (!srvMain.GetGameOver())
             {
                 srvMain.GetSpriteBatch().Draw(sprite, pos, null, Color.White, angle, origin, scale, SpriteEffects.None, 0);
             }
