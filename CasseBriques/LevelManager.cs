@@ -8,12 +8,14 @@ namespace CasseBriques
     {
         public int _currentLevel;
         public int _nbLevels;
+        IMain srvMain;
 
         public LevelManager()
         {
             ServicesLocator.AddService<ILevel>(this);
             _currentLevel = 1;
             _nbLevels = Directory.GetFiles("Levels/", "*.json", SearchOption.AllDirectories).Length;
+            srvMain = ServicesLocator.GetService<IMain>();
         }
         public int GetCurrentLevel()
         {
@@ -33,8 +35,6 @@ namespace CasseBriques
             }
             else // Fin de jeu
             {
-                Debug.WriteLine("Fin du jeu !");
-                IMain srvMain = ServicesLocator.GetService<IMain>();
                 if (srvMain != null)
                 {
                     srvMain.LaunchGame(false);

@@ -153,16 +153,16 @@ namespace CasseBriques
 
                     if (pCollider is Hole)
                     {
-                        if(srvHole.GetState())
+                        if(srvHole.GetState()) // Fin de niveau si le trou est ouvert
                         {
                             isMoving = false;
                             spd = base_spd;
-                            
+                            lives = 3;
                             if (srvPaddle != null && srvPaddle is Paddle)
                             {
                                 pos.X = srvPaddle.GetPosition().X;
                                 pos.Y = srvPaddle.GetPosition().Y - (sprite.Height / 2);
-                                rBall.X = (int)pos.X - (int)origin.X; // Mouvements Rectangle de collision
+                                rBall.X = (int)pos.X - (int)origin.X;
                                 rBall.Y = (int)pos.Y - (int)origin.Y;
                             }
 

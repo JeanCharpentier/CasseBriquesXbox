@@ -125,12 +125,12 @@ namespace CasseBriques
             
             foreach (Brick b in _bricksList)
             {
-                if(_bricksList.Count <= 0)
+                if(_bricksList.Count <= 0) //il n’y a plus de briques dans la liste des briques destructibles
                 {
-                    IHole srvHole = ServicesLocator.GetService<IHole>();
+                    IHole srvHole = ServicesLocator.GetService<IHole>(); //Le BrickManager appelle le service IHole
                     if (srvHole != null)
                     {
-                        srvHole.SetState(true);
+                        srvHole.SetState(true); //Le BrickManager demande au service IHole de changer son état
                     }
                 }
                 b.sprite = _sprTex[b.sprNum];

@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Input;
 public interface IMain
 {
     Vector2 GetBounds();
-    //Texture2D LoadT2D(string pTex);
     SpriteBatch GetSpriteBatch();
     void Shake(float pRadius);
     void QuitGame();
